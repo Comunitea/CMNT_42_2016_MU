@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report
+            id="report_account_move_line"
+            model="account.move.line"
+            name="account.move.line"
+            auto="True"
+            rml="munion_account/report/account_move_line.rml"
+            header="False"
+            string="Líneas de Asiento"/>
+
+    </data>
+</openerp>
+

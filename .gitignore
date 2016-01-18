@@ -10,6 +10,7 @@ __pycache__/
 .Python
 env/
 build/
+openerp_repos/
 develop-eggs/
 dist/
 downloads/
@@ -23,6 +24,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+devel_
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

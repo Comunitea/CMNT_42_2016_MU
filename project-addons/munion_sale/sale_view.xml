@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--
+        Modificar la vista lista de órdenes de venta para mostrar los totales.
+        -->
+        <record id="view_invoice_form_modified" model="ir.ui.view">
+            <field name="name">sale.order.tree.add_totals</field>
+            <field name="model">sale.order</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="amount_untaxed" position="replace">
+                    <field name="amount_untaxed" sum="Total imponible"/>
+                    <field name="amount_total" sum="Total"/>
+                </field>
+            </field>
+        </record>
+
+
+    </data>
+</openerp>

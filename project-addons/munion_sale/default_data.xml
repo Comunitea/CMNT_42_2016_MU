@@ -1,0 +1,93 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data noupdate="1">
+
+        <!--Plazos de pago personalizados -->
+
+        <record id="account.account_payment_term_10" model="account.payment.term">
+            <field eval="&quot;&quot;&quot;10 días&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;10 días&quot;&quot;&quot;" name="note"/>
+        </record>
+        <record id="account.account_payment_term_line_10" model="account.payment.term.line">
+            <field name="payment_id" ref="account.account_payment_term_10"/>
+            <field eval="&quot;&quot;&quot;10 días&quot;&quot;&quot;" name="name"/>
+            <field eval="5" name="sequence"/>
+            <field eval="10" name="days"/>
+            <field eval="&quot;&quot;&quot;balance&quot;&quot;&quot;" name="value"/>
+        </record>
+
+        <record id="account.account_payment_term_15" model="account.payment.term">
+            <field eval="&quot;&quot;&quot;15 días&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;15 días&quot;&quot;&quot;" name="note"/>
+        </record>
+        <record id="account.account_payment_term_line_15" model="account.payment.term.line">
+            <field name="payment_id" ref="account.account_payment_term_15"/>
+            <field eval="&quot;&quot;&quot;15 días&quot;&quot;&quot;" name="name"/>
+            <field eval="5" name="sequence"/>
+            <field eval="15" name="days"/>
+            <field eval="&quot;&quot;&quot;balance&quot;&quot;&quot;" name="value"/>
+        </record>
+
+        <record id="account.account_payment_term_45" model="account.payment.term">
+            <field eval="&quot;&quot;&quot;45 días&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;45 días&quot;&quot;&quot;" name="note"/>
+        </record>
+        <record id="account.account_payment_term_line_45" model="account.payment.term.line">
+            <field name="payment_id" ref="account.account_payment_term_45"/>
+            <field eval="&quot;&quot;&quot;45 días&quot;&quot;&quot;" name="name"/>
+            <field eval="5" name="sequence"/>
+            <field eval="45" name="days"/>
+            <field eval="&quot;&quot;&quot;balance&quot;&quot;&quot;" name="value"/>
+        </record>
+
+        <record id="account.account_payment_term_180" model="account.payment.term">
+            <field eval="&quot;&quot;&quot;180 días&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;180 días&quot;&quot;&quot;" name="note"/>
+        </record>
+        <record id="account.account_payment_term_line_180" model="account.payment.term.line">
+            <field name="payment_id" ref="account.account_payment_term_180"/>
+            <field eval="&quot;&quot;&quot;180 días&quot;&quot;&quot;" name="name"/>
+            <field eval="5" name="sequence"/>
+            <field eval="180" name="days"/>
+            <field eval="&quot;&quot;&quot;balance&quot;&quot;&quot;" name="value"/>
+        </record>
+
+
+        <!-- Tarífas de venta personalizadas -->
+
+        <record id="product.pricelist_20" model="product.pricelist">
+            <field name="name" eval="&quot;&quot;&quot;20% descuento sobre tarifa pública&quot;&quot;&quot;"/>
+            <field name="type" eval="&quot;&quot;&quot;sale&quot;&quot;&quot;"/>
+        </record>
+        <record id="product.pricelist_version_20" model="product.pricelist.version">
+            <field name="name" eval="&quot;&quot;&quot;Versión inicial 20% descuento&quot;&quot;&quot;"/>
+            <field name="pricelist_id" ref="product.pricelist_20"/>
+        </record>
+        <record id="product.pricelist_item_20" model="product.pricelist.item">
+            <field name="name" eval="&quot;&quot;&quot;20% desc. en todos los artículos&quot;&quot;&quot;"/>
+            <field name="price_version_id" ref="product.pricelist_version_20"/>
+            <field name="base" eval="-1"/>
+            <field name="base_pricelist_id" model="product.pricelist" search="[('name','=','Public Pricelist')]"/>
+            <field name="sequence" eval="5"/>
+            <field name="price_discount" eval="-0.20"/>
+        </record>
+
+        <record id="product.pricelist_25" model="product.pricelist">
+            <field name="name" eval="&quot;&quot;&quot;25% descuento sobre tarifa pública&quot;&quot;&quot;"/>
+            <field name="type" eval="&quot;&quot;&quot;sale&quot;&quot;&quot;"/>
+        </record>
+        <record id="product.pricelist_version_25" model="product.pricelist.version">
+            <field name="name" eval="&quot;&quot;&quot;Versión inicial 25% descuento&quot;&quot;&quot;"/>
+            <field name="pricelist_id" ref="product.pricelist_25"/>
+        </record>
+        <record id="product.pricelist_item_25" model="product.pricelist.item">
+            <field name="name" eval="&quot;&quot;&quot;25% desc. en todos los artículos&quot;&quot;&quot;"/>
+            <field name="price_version_id" ref="product.pricelist_version_25"/>
+            <field name="base" eval="-1"/>
+            <field name="base_pricelist_id" model="product.pricelist" search="[('name','=','Public Pricelist')]"/>
+            <field name="sequence" eval="5"/>
+            <field name="price_discount" eval="-0.25"/>
+        </record>
+
+    </data>
+</openerp>

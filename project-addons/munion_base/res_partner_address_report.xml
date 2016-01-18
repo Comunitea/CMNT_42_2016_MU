@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report
+            id="report_partner_address_letter"
+            model="res.partner.address"
+            name="res.partner.address.letter"
+            auto="True"
+            rml="munion_base/report/partner_address_letter.rml"
+            header="False"
+            string="Cartas"/>
+
+        <!-- Print wizard -->
+        <wizard id="wiz_print_letter"
+                model="res.partner.address"
+                string="Cartas"
+                name="munion_base.print_letter_wizard"/>
+
+
+    </data>
+</openerp>

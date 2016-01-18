@@ -1,0 +1,46 @@
+<header>
+    <pageTemplate>
+        <!--
+        Definicion de marcos del reporte:
+            - first: Marco unico que cubre toda el area del cuerpo del reporte.
+        -->
+        <frame id="first" x1="1.3cm" y1="2.5cm" height="23.0cm" width="19cm"/>
+        <!--
+        Graficos de la pagina:
+            Dibuja la cabecera y pie de pagina, junto con la rejilla
+            usada en la zona de las lineas de detalle.
+        -->
+        <pageGraphics>
+            <!--
+            Cabecera de la página
+            -->
+            <setFont name="Helvetica" size="8"/>
+            <fill color="black"/>
+            <stroke color="black"/>
+            <drawRightString x="20cm" y="27.8cm">[[ company.rml_header1 ]]</drawRightString>
+            <!-- Logo (arr.izq.) -->
+            <image x="1.5cm" y="26.8cm" width="1.7cm">[[company.logo]]</image>
+            <!-- Nombre -->
+            <setFont name="Helvetica-Bold" size="16"/>
+            <drawString x="3.2cm" y="27.7cm">[[ company.name ]]</drawString>
+            <!-- CIF -->
+            <setFont name="Helvetica" size="7"/>
+            <drawCentredString x="6.3cm" y="27.2cm">C.I.F. [[ company.partner_id.vat ]]</drawCentredString>
+            <!--Informacion de contacto -->
+            <setFont name="Helvetica" size="9"/>
+            <drawCentredString x="6.3cm" y="26.6cm">[[ '%s (%s)' % (company.partner_id.address and company.partner_id.address[0].street or  '', company.partner_id.address and company.partner_id.address[0].street2 or  '') ]]</drawCentredString>
+            <drawCentredString x="6.3cm" y="26.3cm">[[ company.partner_id.address and company.partner_id.address[0].zip or '' ]] [[ company.partner_id.address and company.partner_id.address[0].city or '' ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name  or '']]</drawCentredString>
+            <drawCentredString x="6.3cm" y="25.9cm">Tel. [[ company.partner_id.address and company.partner_id.address[0].phone or '' ]] - Fax [[ company.partner_id.address and company.partner_id.address[0].fax or '' ]]</drawCentredString>
+            <drawCentredString x="6.3cm" y="25.6cm">E-mail [[ company.partner_id.address and company.partner_id.address[0].email or '' ]]</drawCentredString>
+
+
+            <!--
+            Pié de página
+            -->
+            <setFont name="Helvetica" size="8"/>
+            <drawString x="1.7cm" y="0.8cm">[[ company.rml_footer1 ]]</drawString>
+            <drawCentredString x="10.5cm" y="0.8cm">[[ company.rml_footer2 ]]</drawCentredString>
+            <drawRightString x="20cm" y="0.8cm">Página: <pageNumber/></drawRightString>
+        </pageGraphics>
+    </pageTemplate>
+</header>

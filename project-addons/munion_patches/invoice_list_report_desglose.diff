@@ -1,0 +1,308 @@
+=== modified file 'account_financial_report/report/invoice_list.rml' (properties changed: -x to +x)
+--- account_financial_report/report/invoice_list.rml	2010-08-19 13:35:39 +0000
++++ account_financial_report/report/invoice_list.rml	2011-02-16 21:00:21 +0000
+@@ -286,14 +286,79 @@
+                         </td>
+                     </tr>
+                 </blockTable>
++
++                <section>[[ repeatIn(detailed_taxes and inv.tax_line or [], 'tax_line') ]]
++                <blockTable colWidths="10.0cm,9.7cm,1.8cm,1.4cm,1.6cm,2.6cm" style="Table3">
++                    <tr>
++                        <td>
++                            <para/>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Standard">Base</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body">[[formatLang(obj[2])]]</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para/>
++                        </td>
++                    </tr>
++
++                    <tr>
++                        <td>
++                            <para/>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Standard">IVA Repercutido</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body">[[get_taxes_retentions(obj, 'taxes')]]</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para/>
++                        </td>
++                    </tr>
++
++                    <tr>
++                        <td>
++                            <para/>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Standard">Otros</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body">[[get_taxes_retentions(obj,'retentions')]]</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para/>
++                        </td>
++                    </tr>
++                 </blockTable>
++                </section>
+                 <para style="Standard">
+                     <font color="white"> </font>
+                 </para>
+             </section>
+         </section>
+ 
+-
+-
+         <para style="Header">Customer Refund Invoices [[ (out_refunds or removeParentNode('para')) and '' ]]</para>
+         <section>
+             <section> [[ repeatIn(out_refunds, 'obj') ]] <para style="Standard"> Currency : [[ obj[0] ]] </para>
+@@ -443,6 +508,73 @@
+                         </td>
+                     </tr>
+                 </blockTable>
++
++                <section>[[ repeatIn(detailed_taxes and inv.tax_line or [], 'tax_line') ]]
++                <blockTable colWidths="10.0cm,9.7cm,1.8cm,1.4cm,1.6cm,2.6cm" style="Table3">
++                    <tr>
++                        <td>
++                            <para/>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Standard">Base</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body">[[formatLang(obj[2])]]</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para/>
++                        </td>
++                    </tr>
++
++                    <tr>
++                        <td>
++                            <para/>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Standard">IVA Repercutido</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body">[[get_taxes_retentions(obj, 'taxes')]]</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para/>
++                        </td>
++                    </tr>
++
++                    <tr>
++                        <td>
++                            <para/>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Standard">Otros</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body">[[get_taxes_retentions(obj,'retentions')]]</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para/>
++                        </td>
++                    </tr>
++                 </blockTable>
++                </section>
+                 <para style="Standard">
+                     <font color="white"> </font>
+                 </para>
+@@ -600,6 +732,72 @@
+                         </td>
+                     </tr>
+                 </blockTable>
++              <section>[[ repeatIn(detailed_taxes and inv.tax_line or [], 'tax_line') ]]
++                <blockTable colWidths="10.0cm,9.7cm,1.8cm,1.4cm,1.6cm,2.6cm" style="Table3">
++                    <tr>
++                        <td>
++                            <para/>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Standard">Base</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body">[[formatLang(obj[2])]]</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para/>
++                        </td>
++                    </tr>
++
++                    <tr>
++                        <td>
++                            <para/>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Standard">IVA Soportado</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body">[[get_taxes_retentions(obj, 'taxes')]]</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para/>
++                        </td>
++                    </tr>
++
++                    <tr>
++                        <td>
++                            <para/>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Standard">Retenciones</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body">[[get_taxes_retentions(obj,'retentions')]]</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para/>
++                        </td>
++                    </tr>
++                 </blockTable>
++                </section>
+                 <para style="Standard">
+                     <font color="white"> </font>
+                 </para>
+@@ -756,7 +954,73 @@
+                             <para/>
+                         </td>
+                     </tr>
+-                </blockTable>
++                 </blockTable>
++                <section>[[ repeatIn(detailed_taxes and inv.tax_line or [], 'tax_line') ]]
++                <blockTable colWidths="10.0cm,9.7cm,1.8cm,1.4cm,1.6cm,2.6cm" style="Table3">
++                    <tr>
++                        <td>
++                            <para/>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Standard">Base</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body">[[formatLang(obj[2])]]</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para/>
++                        </td>
++                    </tr>
++
++                    <tr>
++                        <td>
++                            <para/>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Standard">IVA Soportado</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body">[[get_taxes_retentions(obj, 'taxes')]]</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para/>
++                        </td>
++                    </tr>
++
++                    <tr>
++                        <td>
++                            <para/>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Standard">Retenciones</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body">[[get_taxes_retentions(obj,'retentions')]]</para>
++                        </td>
++                        <td>
++                            <para alignment="RIGHT" style="Text body"></para>
++                        </td>
++                        <td>
++                            <para/>
++                        </td>
++                    </tr>
++                 </blockTable>
++                </section>
+                 <para style="Standard">
+                     <font color="white"> </font>
+                 </para>
+

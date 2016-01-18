@@ -1,0 +1,33 @@
+=== modified file 'bin/printer/printer.py'
+--- bin/printer/printer.py	2009-08-18 13:01:22 +0000
++++ bin/printer/printer.py	2009-09-24 08:04:36 +0000
+@@ -187,7 +187,27 @@
+ printer = Printer()
+ 
+ def print_linux_filename(filename):
+-    common.message(_('Linux Automatic Printing not implemented.\nUse preview option !'))
++    # borjals: mod("Direct print in Linux using the default printer, see http://openobject.com/forum/topic7077.html?highlight=print%20automatic", 2009-09-24) {
++            # common.message(_('Linux Automatic Printing not implemented.\nUse preview option !'))
++    # import extra functions for the printing process
++    from subprocess import Popen, PIPE
++
++    # try to open the file and printer
++    try:
++      pf = open(filename, 'r')
++      printer = os.popen('lpr' , 'w')
++      try:
++         # read the file
++         printdata = pf.read()
++         # and parse it to the printer
++         printer.write(printdata)
++      finally:
++         # close the printer and file
++         printer.close()
++         pf.close()
++    except IOError:
++       raise
++   # borjals: }
+ 
+ def print_w32_filename(filename):
+     import win32api
+

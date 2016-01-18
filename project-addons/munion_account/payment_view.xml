@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Extender la vista de órdenes de pago para mostrar totales -->
+        <record id="view_payment_order_tree" model="ir.ui.view">
+            <field name="name">payment.order.tree.add_totals</field>
+            <field name="model">payment.order</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="account_payment.view_payment_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="total" position="replace">
+                    <field name="total" sum="Total"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Vista personalizada de efectos con cantidad pendiente y colores -->
+        <record model="ir.ui.view" id="view_payments_tree">
+            <field name="name">Payments (with amount to pay)</field>
+            <field name="model">account.move.line</field>
+            <field name="field_parent">partner_id</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="18"/>
+            <field name="arch" type="xml">
+                <tree string="Payments" editable="top"
+                        colors="grey:reconcile_id!=0;blue:amount_to_pay==0;">
+                    <field name="invoice" readonly="1"/>
+                    <field name="partner_id" readonly="1"/>
+                    <field name="account_id" readonly="1"/>
+                    <field name="debit" readonly="1" sum="Total debe"/>
+                    <field name="credit" readonly="1" sum="Total haber"/>
+                    <field name="amount_to_pay" string="Pendiente" sum="Total pendiente"/>
+                    <field name="payment_type" readonly="1"/>
+                    <field name="partner_bank" domain="[('partner_id','=',partner_id)]"/>
+                    <field name="date_maturity"/>
+                    <field name="move_id" readonly="1"/>
+                    <field name="reconcile_id" readonly="1"/>
+                    <field name="reconcile_partial_id" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="account_payment_extension.action_payments_to_receive">
+            <field name="name">Payments to receive</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_type">form</field>
+            <field name="limit">500</field>
+            <field name="view_id" ref="view_payments_tree"/>
+            <field name="domain">[('account_id.type','=','receivable'), ('invoice','&lt;&gt;',False), ('reconcile_id','=',False)]</field>
+        </record>
+        <record model="ir.actions.act_window" id="account_payment_extension.action_payments_receivable">
+            <field name="name">Receivable payments</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_type">form</field>
+            <field name="limit">500</field>
+            <field name="view_id" ref="view_payments_tree"/>
+            <field name="domain">[('account_id.type','=','receivable'), ('invoice','&lt;&gt;',False)]</field>
+        </record>
+        <record model="ir.actions.act_window" id="account_payment_extension.action_payments_to_pay">
+            <field name="name">Payments to pay</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_type">form</field>
+            <field name="limit">500</field>
+            <field name="view_id" ref="view_payments_tree"/>
+            <field name="domain">[('account_id.type','=','payable'), ('invoice','&lt;&gt;',False), ('reconcile_id','=',False)]</field>
+        </record>
+        <record model="ir.actions.act_window" id="account_payment_extension.action_payments_payable">
+            <field name="name">Payable payments</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_type">form</field>
+            <field name="limit">500</field>
+            <field name="view_id" ref="view_payments_tree"/>
+            <field name="domain">[('account_id.type','=','payable'), ('invoice','&lt;&gt;',False)]</field>
+        </record>
+
+
+        <!-- Extender la vista de órdenes de pago para permitir
+             volver a borrador desde done/realizado -->
+        <record id="view_payment_order_form_done2draft" model="ir.ui.view">
+            <field name="name">payment.order.form.done2draft</field>
+            <field name="model">payment.order</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account_payment.view_payment_order_form"/>
+            <field name="arch" type="xml">
+                <button name="set_to_draft" position="replace">
+                    <button name="set_to_draft" states="cancel,done" string="Set to draft" type="object"/>
+                </button>
+            </field>
+        </record>
+
+         <!--
+        Cobro 'actuales' (del año actual)
+        -->
+
+        <record id="view_payments_filter_add_cur_year" model="ir.ui.view">
+            <field name="name">Invoice Payments Select_add_cur_year</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account_payment_extension.view_payments_filter"/>
+            <field name="type">search</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <filter string="Unreconciled" position="after">
+                    <filter icon="terp-go-month" string="Current year" domain="[('date_planned','>=',time.strftime('%%Y-01-01')]"/>
+                </filter>
+            </field>
+        </record>
+
+
+    </data>
+</openerp>

@@ -1,0 +1,47 @@
+=== modified file 'account/account.py'
+--- account/account.py	2009-12-16 08:09:34 +0000
++++ account/account.py	2010-01-18 13:04:07 +0000
+@@ -493,6 +493,8 @@
+         'company_id': fields.related('default_credit_account_id','company_id',type='many2one', relation="res.company", string="Company"),
+         'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
+             help="The sequence used for invoice numbers in this journal."),
++        'refund_sequence_id': fields.many2one('ir.sequence', 'Refund Sequence', \
++            help="The sequence used for refund invoice numbers in this journal."),
+     }
+ 
+     _defaults = {
+
+=== modified file 'account/account_view.xml'
+--- account/account_view.xml	2009-12-01 09:41:35 +0000
++++ account/account_view.xml	2010-01-18 15:13:25 +0000
+@@ -263,7 +263,9 @@
+                             <field name="view_id"/>
+                             <field name="currency"/>
+                             <field name="sequence_id"/>
++                            <newline/>
+                             <field name="invoice_sequence_id"/>
++                            <field name="refund_sequence_id"/>
+                             <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                             <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                             <field name="user_id" groups="base.group_extended"/>
+
+=== modified file 'account/invoice.py'
+--- account/invoice.py	2009-12-10 06:15:40 +0000
++++ account/invoice.py	2010-01-18 15:48:39 +0000
+@@ -715,9 +715,14 @@
+         obj_inv = self.browse(cr, uid, ids)[0]
+         for (id, invtype, number, move_id, reference) in cr.fetchall():
+             if not number:
+-                if obj_inv.journal_id.invoice_sequence_id:
++                if invtype in ('in_invoice', 'out_invoice') \
++                        and obj_inv.journal_id.invoice_sequence_id:
+                     sid = obj_inv.journal_id.invoice_sequence_id.id
+                     number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id=%s', {'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id})
++                elif invtype in ('in_refund', 'out_refund') \
++                        and obj_inv.journal_id.refund_sequence_id:
++                    sid = obj_inv.journal_id.refund_sequence_id.id
++                    number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id=%s', {'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id})
+                 else:
+                     number = self.pool.get('ir.sequence').get(cr, uid,
+                             'account.invoice.' + invtype)
+

@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<document filename="invoice.pdf">
+  <template pageSize="(21cm,29cm)" title="" author="" allowSplitting="20" showBoundary="0">
+    <pageTemplate id="first">
+
+        <!-- 
+        Definición de marcos del reporte:
+            - body_head: Contendrá el número y fecha del documento, y la dirección de contacto.
+        -->
+        <frame id="body_head" x1="1.7cm" y1="21.1cm" height="3.4cm" width="17.7cm"/>
+        <frame id="body_content" x1="1.7cm" y1="4.0cm" height="16.8cm" width="18.6cm"/>
+
+        <!--
+        Gráficos de la página:
+            Dibuja la cabecera y pié de página
+        -->
+        <pageGraphics>
+            <!-- 
+            Cabecera de la página
+            -->
+            <setFont name="Helvetica" size="8"/>
+            <fill color="black"/>
+            <stroke color="black"/>
+            <drawRightString x="20cm" y="27.8cm">[[ company.rml_header1 ]]</drawRightString>
+            <!-- Logo (arr.izq.) -->
+            <image x="1.5cm" y="26.8cm" width="1.7cm">[[company.logo]]</image>
+            <!-- Nombre -->
+            <setFont name="Helvetica-Bold" size="16"/>
+            <drawString x="3.2cm" y="27.7cm">[[ company.name ]]</drawString>
+            <!-- CIF -->
+            <setFont name="Helvetica" size="7"/>
+            <drawCentredString x="6.3cm" y="27.2cm">C.I.F. [[ company.partner_id.vat ]]</drawCentredString>
+            <!--Informacion de contacto -->
+            <setFont name="Helvetica" size="9"/>
+            <drawCentredString x="6.3cm" y="26.6cm">[[ '%s (%s)' % (company.partner_id.address and company.partner_id.address[0].street or  '', company.partner_id.address and company.partner_id.address[0].street2 or  '') ]]</drawCentredString>
+            <drawCentredString x="6.3cm" y="26.3cm">[[ company.partner_id.address and company.partner_id.address[0].zip or '' ]] [[ company.partner_id.address and company.partner_id.address[0].city or '' ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name  or '']]</drawCentredString>
+            <drawCentredString x="6.3cm" y="25.9cm">Tel. [[ company.partner_id.address and company.partner_id.address[0].phone or '' ]] - Fax [[ company.partner_id.address and company.partner_id.address[0].fax or '' ]]</drawCentredString>
+            <drawCentredString x="6.3cm" y="25.6cm">E-mail [[ company.partner_id.address and company.partner_id.address[0].email or '' ]]</drawCentredString>
+
+            <!-- 
+            Pié de página
+            -->
+            <setFont name="Helvetica" size="8"/>
+            <drawString x="1.7cm" y="0.8cm">[[ company.rml_footer1 ]]</drawString>
+            <drawCentredString x="10.5cm" y="0.8cm">[[ company.rml_footer2 ]]</drawCentredString>
+        </pageGraphics>
+    </pageTemplate>
+  </template>
+
+  <!--
+  Definición de estilos utilizados a lo largo del reporte
+  -->
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="InvisibleTable">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="InvisibleTableNoPadding">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <blockTopPadding length="0.0"/>
+      <blockLeftPadding length="0.0"/>
+      <blockRightPadding length="0.0"/>
+      <blockBottomPadding length="0.0"/>
+    </blockTableStyle>
+    <blockTableStyle id="InvisibleTableNoPaddingBottomVAlign">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="BOTTOM"/>
+      <blockTopPadding length="0.0"/>
+      <blockLeftPadding length="0.0"/>
+      <blockRightPadding length="0.0"/>
+      <blockBottomPadding length="0.0"/>
+    </blockTableStyle>
+    <blockTableStyle id="GridTable">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="#000000"/>
+    </blockTableStyle>
+    <blockTableStyle id="TableWithHorizontalBorders">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="5,0"/>
+    </blockTableStyle>
+    <blockTableStyle id="TableWithVerticalBorders">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="5,-1"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="Standard" fontName="Times-Roman"/>
+    <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Heading" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Contents" fontName="Times-Roman"/>
+    <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER"/>
+    <paraStyle name="Caption" fontName="Times-Roman" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Times-Roman"/>
+    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Centre_7" fontName="Helvetica" fontSize="7.0" leading="8" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Footer" fontName="Times-Roman"/>
+    <paraStyle name="Horizontal Line" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
+    <paraStyle name="Heading 9" fontName="Helvetica-Bold" fontSize="75%" leading="NaN" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_1" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Italic" rightIndent="0.0" leftIndent="20.0" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Preformatted Text" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_11_Bold" fontName="Helvetica-Bold" fontSize="10.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_6_Italic" fontName="Helvetica-Oblique" fontSize="6.0" leading="6" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+  </stylesheet>
+  <images/>
+
+  <!--
+  Contenido de (los marcos del) reporte.
+  -->
+  <story>
+    <!-- Repetimos para cada obj 'o' el contenido de <story> -->
+    <para style="terp_default_8">[[repeatIn(objects,'o')]]</para>
+    <para style="terp_default_8">[[ o.partner_id and setLang(o.partner_id.lang) or '' ]]</para>
+
+    <!-- 
+    *** Marco de la cabecera de documento **************************************
+    -->
+    <setNextFrame name="body_head"/>
+    <nextFrame/>
+    <blockTable colWidths="7.7cm,1.1cm,8.9cm" style="InvisibleTableNoPaddingBottomVAlign">
+      <tr>
+        <td>
+          <para style="terp_default_8">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="terp_default_8">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+            <!--
+            Recuadro de la dirección de contacto
+            -->
+            <blockTable colWidths="8.9cm" style="InvisibleTable">
+                <tr>
+                    <td>
+                      <para style="terp_default_9">[[ o.name ]] [[ o.title or '' ]]<font color="white"> </font></para>
+                      <para style="terp_default_9">[[ o.street ]]<font color="white"> </font></para>
+                      <!-- <para style="terp_default_9">[[ o.address_contact_id.street2 or removeParentNode('para') ]]</para> -->
+                      <para style="terp_default_9">[[ o.zip or '' ]] [[ o.city or '' ]]<font color="white"> </font></para>
+                      <para style="terp_default_9">[[ o.state_id and o.state_id.name or '' ]] [[ o.country_id and o.country_id.name or '' ]]<font color="white"> </font></para>
+                    </td>
+                </tr>
+            </blockTable>
+        </td>
+      </tr>
+    </blockTable>
+
+    <!--
+    *** Marco de las líneas de detalle del documento ***************************
+    -->
+    <setNextFrame name="body_content"/>
+    <nextFrame/>
+
+    <section>
+        [[ repeatIn((data.get('form') and data['form'].get('letter_text') or '').split("\n"), 'line') ]]
+        <para style="terp_default_9">
+            [[ line or '' ]]
+            <font color="white"> </font>
+        </para>
+    </section>
+
+  </story>
+</document>

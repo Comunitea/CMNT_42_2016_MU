@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Modificaciones en la vista partner
+-->
+<openerp>
+    <data>
+
+
+        <!-- 
+        Menú y acción de facturas de clientes 'actuales' (del año actual)
+        -->
+
+        <record id="action_invoice_tree_out_invoice_current_year" model="ir.actions.act_window">
+            <field name="name">Facturas de cliente actuales</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('type','=','out_invoice'), ('date_invoice','>=',time.strftime('%Y-01-01'))]</field>
+            <field name="context">{'type':'out_invoice'}</field>
+        </record>
+        <record id="action_invoice_tree_out_invoice_current_year_view1" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_invoice_tree_out_invoice_current_year"/>
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="action_invoice_tree_out_invoice_current_year_view2" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_invoice_tree_out_invoice_current_year"/>
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.invoice_form"/>
+        </record>
+
+        <menuitem id="menu_action_invoice_tree_out_invoice_current_year"
+            parent="account.menu_action_invoice_tree1"
+            action="action_invoice_tree_out_invoice_current_year"/>
+
+
+
+        <!--
+        Menú y acción de facturas de proveedores 'actuales' (del año actual)
+        -->
+
+        <record id="action_invoice_tree_in_invoice_current_year" model="ir.actions.act_window">
+            <field name="name">Facturas de proveedor actuales</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('type','=','in_invoice'), ('date_invoice','>=',time.strftime('%Y-01-01'))]</field>
+            <field name="context">{'type':'in_invoice'}</field>
+        </record>
+        <record id="action_invoice_tree_in_invoice_current_year_view1" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_invoice_tree_in_invoice_current_year"/>
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="action_invoice_tree_in_invoice_current_year_view2" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_invoice_tree_in_invoice_current_year"/>
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.invoice_supplier_form"/>
+        </record>
+
+        <menuitem id="menu_action_invoice_tree_in_invoice_current_year"
+            parent="account.menu_action_invoice_tree2"
+            action="action_invoice_tree_in_invoice_current_year"/>
+
+
+
+        <!--
+        Menú y acción de abonos de clientes 'actuales' (del año actual)
+        -->
+
+        <record id="action_invoice_tree_out_refund_current_year" model="ir.actions.act_window">
+            <field name="name">Facturas de abono de cliente actuales</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('type','=','out_refund'), ('date_invoice','>=',time.strftime('%Y-01-01'))]</field>
+            <field name="context">{'type':'out_refund'}</field>
+        </record>
+        <record id="action_invoice_tree_out_refund_current_year_view1" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_invoice_tree_out_refund_current_year"/>
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="action_invoice_tree_out_refund_current_year_view2" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_invoice_tree_out_refund_current_year"/>
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.invoice_form"/>
+        </record>
+
+        <menuitem id="menu_action_invoice_tree_out_refund_current_year"
+            parent="account.menu_action_invoice_tree3"
+            action="action_invoice_tree_out_refund_current_year"/>
+
+
+
+        <!--
+        Menú y acción de facturas de abonos de proveedores 'actuales' (del año actual)
+        -->
+
+        <record id="action_invoice_tree_in_refund_current_year" model="ir.actions.act_window">
+            <field name="name">Facturas de abono de proveedor actuales</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('type','=','in_refund'), ('date_invoice','>=',time.strftime('%Y-01-01'))]</field>
+            <field name="context">{'type':'in_refund'}</field>
+        </record>
+        <record id="action_invoice_tree_in_refund_current_year_view1" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_invoice_tree_in_refund_current_year"/>
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="action_invoice_tree_in_refund_current_year_view2" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_invoice_tree_in_refund_current_year"/>
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.invoice_supplier_form"/>
+        </record>
+
+        <menuitem id="menu_action_invoice_tree_in_refund_current_year"
+            parent="account.menu_action_invoice_tree4"
+            action="action_invoice_tree_in_refund_current_year"/>
+
+    </data>
+</openerp>

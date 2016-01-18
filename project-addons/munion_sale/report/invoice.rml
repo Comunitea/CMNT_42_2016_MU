@@ -1,0 +1,514 @@
+<?xml version="1.0"?>
+<document filename="invoice.pdf">
+  <template pageSize="(21cm,29cm)" title="" author="" allowSplitting="20" showBoundary="0">
+    <pageTemplate id="first">
+
+        <!--
+        Definición de marcos del reporte:
+            - body_head: Contendrá el número y fecha del documento, y la dirección de contacto.
+            - body_head_top_right: Contendrá la dirección de factura.
+            - body_content: Contendrá las líneas de detalle del documento.
+            - body_tail: Contendrá los totales, impuestos y formas de pago.
+        -->
+        <frame id="body_head" x1="1.7cm" y1="21.1cm" height="3.4cm" width="17.7cm"/>
+        <frame id="body_head_top_right" x1="11.8cm" y1="24.0cm" height="4.2cm" width="8.5cm"/>
+        <frame id="body_content" x1="1.7cm" y1="4.0cm" height="16.8cm" width="18.6cm"/>
+        <frame id="body_tail" x1="1.7cm" y1="0.3cm" height="3.4cm" width="18.6cm"/>
+
+        <!--
+        Gráficos de la página:
+            Dibuja la cabecera y pié de página, junto con la rejilla
+            usada en la zona de las líneas de detalle.
+        -->
+        <pageGraphics>
+            <!--
+            Cabecera de la página
+            -->
+            <setFont name="Helvetica" size="8"/>
+            <fill color="black"/>
+            <stroke color="black"/>
+            <drawRightString x="20cm" y="27.8cm">[[ company.rml_header1 ]]</drawRightString>
+            <!-- Logo (arr.izq.) -->
+            <image x="1.5cm" y="26.8cm" width="1.7cm">[[company.logo]]</image>
+            <!-- Nombre -->
+            <setFont name="Helvetica-Bold" size="16"/>
+            <drawString x="3.2cm" y="27.7cm">[[ company.name ]]</drawString>
+            <!-- CIF -->
+            <setFont name="Helvetica" size="7"/>
+            <drawCentredString x="6.3cm" y="27.2cm">C.I.F. [[ company.partner_id.vat ]]</drawCentredString>
+            <!--Informacion de contacto -->
+            <setFont name="Helvetica" size="9"/>
+            <drawCentredString x="6.3cm" y="26.6cm">[[ '%s (%s)' % (company.partner_id.address and company.partner_id.address[0].street or  '', company.partner_id.address and company.partner_id.address[0].street2 or  '') ]]</drawCentredString>
+            <drawCentredString x="6.3cm" y="26.3cm">[[ company.partner_id.address and company.partner_id.address[0].zip or '' ]] [[ company.partner_id.address and company.partner_id.address[0].city or '' ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name  or '']]</drawCentredString>
+            <drawCentredString x="6.3cm" y="25.9cm">Tel. [[ company.partner_id.address and company.partner_id.address[0].phone or '' ]] - Fax [[ company.partner_id.address and company.partner_id.address[0].fax or '' ]]</drawCentredString>
+            <drawCentredString x="6.3cm" y="25.6cm">E-mail [[ company.partner_id.address and company.partner_id.address[0].email or '' ]]</drawCentredString>
+
+            <!--
+            Cuadrícula de las líneas de detalle
+            -->
+            <translate dx="0.0cm"/>
+            <grid xs="1.7cm,3.3cm,5.3cm,16.5cm,18.45cm,20.3cm" ys="4.0cm,20.1cm,20.7cm"/>
+            <translate dx="0.0cm"/>
+
+            <!--
+            Pié de página
+            -->
+            <setFont name="Helvetica" size="8"/>
+            <drawString x="1.7cm" y="0.8cm">[[ company.rml_footer1 ]]</drawString>
+            <drawCentredString x="10.5cm" y="0.8cm">[[ company.rml_footer2 ]]</drawCentredString>
+            <drawRightString x="20cm" y="0.3cm">Página: <pageNumber/></drawRightString>
+        </pageGraphics>
+    </pageTemplate>
+  </template>
+
+  <!--
+  Definición de estilos utilizados a lo largo del reporte
+  -->
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="InvisibleTable">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="InvisibleTableNoPadding">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <blockTopPadding length="0.0"/>
+      <blockLeftPadding length="0.0"/>
+      <blockRightPadding length="0.0"/>
+      <blockBottomPadding length="0.0"/>
+    </blockTableStyle>
+    <blockTableStyle id="InvisibleTableNoPaddingBottomVAlign">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="BOTTOM"/>
+      <blockTopPadding length="0.0"/>
+      <blockLeftPadding length="0.0"/>
+      <blockRightPadding length="0.0"/>
+      <blockBottomPadding length="0.0"/>
+    </blockTableStyle>
+    <blockTableStyle id="GridTable">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="#000000"/>
+    </blockTableStyle>
+    <blockTableStyle id="TableWithHorizontalBorders">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="5,0"/>
+    </blockTableStyle>
+    <blockTableStyle id="TableWithVerticalBorders">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="5,-1"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="Standard" fontName="Times-Roman"/>
+    <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Heading" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Contents" fontName="Times-Roman"/>
+    <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER"/>
+    <paraStyle name="Caption" fontName="Times-Roman" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Times-Roman"/>
+    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Centre_7" fontName="Helvetica" fontSize="7.0" leading="8" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Footer" fontName="Times-Roman"/>
+    <paraStyle name="Horizontal Line" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
+    <paraStyle name="Heading 9" fontName="Helvetica-Bold" fontSize="75%" leading="NaN" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_1" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Italic" rightIndent="0.0" leftIndent="20.0" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Preformatted Text" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_11_Bold" fontName="Helvetica-Bold" fontSize="10.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_6" fontName="Helvetica" fontSize="6.0" leading="6" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_6_Italic" fontName="Helvetica-Oblique" fontSize="6.0" leading="6" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+  </stylesheet>
+  <images/>
+
+  <!--
+  Contenido de (los marcos del) reporte.
+  -->
+  <story>
+    <!-- Repetimos para cada documento 'o' el contenido de <story> -->
+    <para style="terp_default_8">[[repeatIn(objects,'o')]]</para>
+    <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
+
+    <!--
+    *** Marco de la cabecera de documento **************************************
+    -->
+    <setNextFrame name="body_head"/>
+    <nextFrame/>
+    <blockTable colWidths="7.7cm,1.1cm,8.9cm" style="InvisibleTableNoPaddingBottomVAlign">
+      <tr>
+        <td>
+            <blockTable colWidths="3.6cm,0.5cm,3.6cm" style="InvisibleTableNoPadding">
+                <tr>
+                    <td>
+                        <!--
+                        Recuadro del número del documento
+                        -->
+                        <blockTable colWidths="3.6cm" style="GridTable">
+                            <tr>
+                                <td>
+                                    <para style="terp_default_Centre_9_Bold">Factura [[ ((o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')) or removeParentNode('para')) and '' ]]</para>
+                                    <para style="terp_default_Centre_9_Bold">PRO-FORMA[[ ((o.type == 'out_invoice' and o.state == 'proforma2') or removeParentNode('para')) and '' ]]</para>
+                                    <para style="terp_default_Centre_9_Bold">Borrador fact.[[ ((o.type == 'out_invoice' and o.state == 'draft') or removeParentNode('para')) and '' ]]</para>
+                                    <para style="terp_default_Centre_9_Bold">Fact. cancelada[[ ((o.type == 'out_invoice' and o.state == 'cancel') or removeParentNode('para')) and '' ]]</para>
+                                    <para style="terp_default_Centre_9_Bold">Fact. Rectificativa[[ (o.type=='out_refund' or removeParentNode('para')) and '' ]]</para>
+                                    <para style="terp_default_Centre_9_Bold">Fact. Rectificativa Prov.[[ (o.type=='in_refund' or removeParentNode('para')) and '' ]]</para>
+                                    <para style="terp_default_Centre_9_Bold">Factura Prov.[[ (o.type=='in_invoice' or removeParentNode('para')) and '' ]]</para>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <para style="terp_default_Centre_9">[[ o.number ]]<font color="white"> </font></para>
+                                </td>
+                            </tr>
+                        </blockTable>
+                    </td>
+                    <td>
+                        <para style="terp_default_8"><font color="white"> </font></para>
+                    </td>
+                    <td>
+                        <!--
+                        Recuadro de la fecha
+                        -->
+                        <blockTable colWidths="3.6cm" style="GridTable">
+                            <tr>
+                                <td>
+                                    <para style="terp_default_Centre_9_Bold">Fecha</para>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <para style="terp_default_Centre_9">[[ o.date_invoice and formatLang(o.date_invoice,date=True) ]]<font color="white"> </font></para>
+                                </td>
+                            </tr>
+                        </blockTable>
+                    </td>
+                </tr>
+            </blockTable>
+        </td>
+        <td>
+          <para style="terp_default_8">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+            <!--
+            Recuadro de la dirección de contacto
+            (la de factura va en otro marco)
+            -->
+            <blockTable colWidths="8.9cm" style="InvisibleTable">
+                <tr>
+                    <td>
+                      <para style="terp_default_8">Dirección contacto</para>
+                      <para style="terp_default_9">[[ o.address_contact_id.name ]] [[ o.address_contact_id.title or '' ]]<font color="white"> </font></para>
+                      <para style="terp_default_9">[[ o.address_contact_id.street ]]<font color="white"> </font></para>
+                      <!-- <para style="terp_default_9">[[ o.address_contact_id.street2 or removeParentNode('para') ]]</para> -->
+                      <para style="terp_default_9">[[ o.address_contact_id.zip or '' ]] [[ o.address_contact_id.city or '' ]]<font color="white"> </font></para>
+                      <para style="terp_default_9">[[ o.address_contact_id.state_id and o.address_contact_id.state_id.name or '' ]] [[ o.address_contact_id.country_id and o.address_contact_id.country_id.name or '' ]]<font color="white"> </font></para>
+                    </td>
+                </tr>
+            </blockTable>
+        </td>
+      </tr>
+    </blockTable>
+
+
+    <!--
+    *** Marco de la parte superior derecha de la cabecera **********************
+    -->
+    <setNextFrame name="body_head_top_right"/>
+    <nextFrame/>
+    <!--
+    Recuadro de la dirección de factura
+    -->
+    <blockTable colWidths="8.1cm" style="GridTable">
+        <tr>
+            <td>
+              <para style="terp_default_8">Dirección factura<font color="white"> </font></para>
+              <para style="terp_default_9">[[ o.address_invoice_id.name ]] [[ o.address_invoice_id.title or '' ]]<font color="white"> </font></para>
+              <para style="terp_default_9">N.I.F.: [[ o.partner_id.vat or '' ]]<font color="white"> </font></para>
+              <para style="terp_default_9">[[ o.address_invoice_id.street ]]<font color="white"> </font></para>
+              <!-- <para style="terp_default_9">[[ o.address_invoice_id.street2 or removeParentNode('para') ]]<font color="white"> </font></para> -->
+              <para style="terp_default_9">[[ o.address_invoice_id.zip or '' ]] [[ o.address_invoice_id.city or '' ]]<font color="white"> </font></para>
+              <para style="terp_default_9">[[ o.address_invoice_id.state_id and o.address_invoice_id.state_id.name or '' ]] [[ o.address_invoice_id.country_id and o.address_invoice_id.country_id.name or '' ]]<font color="white"> </font></para>
+            </td>
+        </tr>
+    </blockTable>
+
+
+    <!--
+    *** Marco de las líneas de detalle del documento ***************************
+    -->
+    <setNextFrame name="body_content"/>
+    <nextFrame/>
+    <!-- El contenido puede expandirse por más de una página (pto = please turn over) -->
+    <pto>
+
+        <!--
+        Texto de continuación de página ('continua en')
+        -->
+        <pto_trailer>
+            <setNextFrame name="body_tail"/>
+            <nextFrame/>
+            <para style="terp_tblheader_Details">(continua en la siguiente página...)</para>
+            <nextFrame/>
+            <nextFrame/>
+            <para style="terp_default_8">
+              <font color="white"> </font>
+            </para>
+            <para style="terp_default_8">
+              <font color="white"> </font>
+            </para>
+            <para style="terp_default_8">
+              <font color="white"> </font>
+            </para>
+            <para style="terp_tblheader_Details">(...continuación [[ o.number ]] [[ o.name and "(%s)" % o.name ]])</para>
+        </pto_trailer>
+
+        <!--
+        Texto de continuación de página ('continuación de')
+        -->
+        <pto_header>
+            <setNextFrame name="body_content"/>
+            <nextFrame/>
+            <!--
+            Cabecera de las líneas de detalle (en página de continuación)
+            -->
+            <blockTable colWidths="1.6cm,2.0cm,11.1cm,1.9cm,1.9cm" repeatRows="1" style="InvisibleTable">
+              <tr>
+                <td>
+                  <para style="terp_tblheader_Details">Albarán</para>
+                </td>
+                <td>
+                  <para style="terp_tblheader_Details">Cantidad</para>
+                </td>
+                <td>
+                  <para style="terp_tblheader_Details">Descripción</para>
+                </td>
+                <td>
+                  <para style="terp_tblheader_Details_Right">Precio</para>
+                </td>
+                <td>
+                  <para style="terp_tblheader_Details_Right">Importe</para>
+                </td>
+              </tr>
+              <tr>
+                  <td><para style="terp_default_Centre_8">...</para></td>
+                  <td><para style="terp_default_Centre_8">...</para></td>
+                  <td><para style="terp_default_9">...</para></td>
+                  <td><para style="terp_default_Right_8">...</para></td>
+                  <td><para style="terp_default_Right_8">...</para></td>
+              </tr>
+            </blockTable>
+        </pto_header>
+
+        <!--
+        Cabecera de las líneas de detalle (primera página)
+        -->
+        <blockTable colWidths="1.6cm,2.0cm,11.1cm,1.9cm,1.9cm" repeatRows="1" style="InvisibleTable">
+          <tr>
+            <td>
+              <para style="terp_tblheader_Details">Albarán</para>
+            </td>
+            <td>
+              <para style="terp_tblheader_Details">Cantidad</para>
+            </td>
+            <td>
+              <para style="terp_tblheader_Details">Descripción</para>
+            </td>
+            <td>
+              <para style="terp_tblheader_Details_Right">Precio</para>
+            </td>
+            <td>
+              <para style="terp_tblheader_Details_Right">Importe</para>
+            </td>
+          </tr>
+        </blockTable>
+        <!--
+        Líneas de detalle del documento
+        -->
+        <section  height="100%">
+          <para style="terp_default_1">[[repeatIn(o.invoice_line,'line')]]</para>
+          <!-- Repetimos la sección por cada línea del documento 'line' -->
+          <blockTable colWidths="1.6cm,2.0cm,11.1cm,1.9cm,1.9cm" style="InvisibleTable">
+            <tr>
+              <td>
+                <para style="terp_default_Centre_8">[[ line.origin or '' ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_Centre_8">[[ formatLang(line.quantity)]] [[ (line.uos_id and line.uos_id.name) or '' ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_9">[[ line.name ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_Right_8">[[ formatLang(line.price_unit) ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_Right_8">[[ formatLang(line.price_subtotal) ]]</para>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <para style="terp_default_Centre_8"><font color="white"> </font></para>
+              </td>
+              <td>
+                <para style="terp_default_Centre_8"><font color="white"> </font></para>
+              </td>
+              <td>
+                <para style="terp_default_Italic">[[ format(line.note or removeParentNode('tr')) ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_Right_8"><font color="white"> </font></para>
+              </td>
+              <td>
+                <para style="terp_default_Right_8"><font color="white"> </font></para>
+              </td>
+            </tr>
+          </blockTable>
+        </section>
+
+    </pto>
+
+
+    <!--
+    *** Marco de los totales del documento *************************************
+    -->
+    <setNextFrame name="body_tail"/>
+    <nextFrame/>
+    <!-- Recuadro de los totales -->
+    <blockTable colWidths="6.6cm,8.6cm,3.4cm" style="GridTable">
+        <!--
+        Cabeceras de los totales
+        -->
+        <tr>
+            <td>
+                <!-- Cabecera impuestos -->
+                <blockTable colWidths="2.4cm,2.1cm,2.1cm" style="InvisibleTableNoPadding">
+                    <tr>
+                        <td>
+                            <para style="terp_default_Centre_8">IMPUESTO</para>
+                        </td>
+                        <td>
+                            <para style="terp_default_Centre_8">BASE</para>
+                        </td>
+                        <td>
+                            <para style="terp_default_Centre_8">IMPORTE</para>
+                        </td>
+                    </tr>
+                </blockTable>
+            </td>
+            <td>
+                <!-- Cabecera formas de pago -->
+                <blockTable colWidths="2.5cm,2.5cm,3.6cm" style="InvisibleTableNoPadding">
+                    <tr>
+                        <td>
+                            <para style="terp_default_Centre_8">FORMA DE PAGO</para>
+                        </td>
+                        <td>
+                            <para style="terp_default_Centre_8">VTO.</para>
+                        </td>
+                        <td>
+                            <!-- Pago normal (recibo, efectivo...): mostramos cuenta del cliente -->
+                            <para style="terp_default_Centre_8">BANCO[[ (o.payment_type and o.payment_type.code!='TRANSF' or removeParentNode('para')) and '']]</para>
+                            <!-- Pago por transferencia: mostramos nuestra cuenta bancaria -->
+                            <para style="terp_default_Centre_8">INGRESAR EN[[ (o.payment_type and o.payment_type.code=='TRANSF' or removeParentNode('para')) and '' ]]</para>
+                            <!-- Sin forma de pago -->
+                            <para style="terp_default_Centre_8">[[ ((not o.payment_type) or removeParentNode('para')) and '' ]]</para>
+                        </td>
+                    </tr>
+                </blockTable>
+            </td>
+            <td>
+                <!-- Cabecera totales -->
+                <para style="terp_default_Centre_9_Bold">TOTAL FACTURA</para>
+            </td>
+        </tr>
+        <!--
+        Datos de los totales
+        -->
+        <tr>
+            <td>
+                <section>
+                    <!-- Datos impuestos -->
+                    <!-- Repetimos la sección por cada tipo de IVA -->
+                    <para style="terp_default_8">[[ repeatIn(o.tax_line,'t') ]]</para>
+                    <blockTable colWidths="2.4cm,2.1cm,2.1cm" style="InvisibleTableNoPadding">
+                        <tr>
+                            <td>
+                                <para style="terp_default_Centre_7">[[ t.name ]]</para>
+                            </td>
+                            <td>
+                                <para style="terp_default_Centre_7">[[ formatLang(t.base) ]]</para>
+                            </td>
+                            <td>
+                                <para style="terp_default_Centre_7">[[ t.tax_code_id.notprintable and removeParentNode('blockTable') or '' ]][[ formatLang(t.amount) ]]</para>
+                            </td>
+                        </tr>
+                    </blockTable>
+                    <para style="terp_default_8">
+                      <font color="white"> </font>
+                    </para>
+                </section>
+            </td>
+            <td>
+                <!-- Datos formas de pago -->
+                <blockTable colWidths="2.5cm,2.5cm,3.6cm" style="InvisibleTableNoPadding">
+                    <tr>
+                        <td>
+                            <para style="terp_default_Centre_7">[[ o.payment_type and format((o.payment_type.name)) or removeParentNode('para') ]]</para>
+                            <para style="terp_default_Centre_7">[[ o.payment_term and format((o.payment_term.note)) or removeParentNode('para') ]]</para>
+                        </td>
+                        <td>
+                            <para style="terp_default_Centre_7">[[ ((not o.move_id) and o.date_due and formatLang(o.date_due,date=True)) or removeParentNode('para') ]]</para>
+                            <section>
+                                <para style="terp_default_Centre_6">[[ repeatIn((o.move_id and o.move_id.line_id) or [], 'line') ]]</para>
+                                <para style="terp_default_Centre_7">[[ line.date_maturity ]]</para>
+                                <para style="terp_default_Centre_6_Italic">[[ line.amount_currency or line.debit ]] [[o.currency_id.code]]</para>
+                                <para style="terp_default_Centre_6">[[(line.account_id.id == o.account_id.id) and ' ' or removeParentNode('section') ]]</para>
+                            </section>
+                        </td>
+                        <td>
+                            <para style="terp_default_Centre_7">[[ o.payment_type and o.payment_type.code!='TRANSF' and o.partner_bank and o.partner_bank.name.split(',')[0] or removeParentNode('para') ]]</para>
+                            <para style="terp_default_Centre_7">[[ o.payment_type and o.payment_type.code!='TRANSF' and o.partner_bank and o.partner_bank.iban or removeParentNode('para') ]]</para>
+                            <para style="terp_default_Centre_7">[[ o.payment_type and o.payment_type.code=='TRANSF' and company.partner_id.bank_ids[0] and company.partner_id.bank_ids[0].name.split(',')[0] or removeParentNode('para') ]]</para>
+                            <para style="terp_default_Centre_7">[[ o.payment_type and o.payment_type.code=='TRANSF' and company.partner_id.bank_ids[0] and company.partner_id.bank_ids[0].iban or removeParentNode('para') ]]</para>
+                        </td>
+                    </tr>
+                </blockTable>
+            </td>
+            <td>
+                <!-- Datos totales -->
+                <para style="terp_default_Right_11_Bold">[[ formatLang(o.amount_total ) ]] [[ o.currency_id.code ]]</para>
+            </td>
+        </tr>
+    </blockTable>
+
+  </story>
+</document>

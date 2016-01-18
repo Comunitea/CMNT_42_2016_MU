@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report 
+            id="sale.report_sale_order"
+            model="sale.order" 
+            name="sale.order"
+            auto="False"
+            rml="munion_sale/report/order.rml"
+            header="False"
+            string="Quotation / Order"/>
+
+    </data>
+</openerp>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report
+            id="report_partner"
+            model="res.partner"
+            name="res.partner"
+            auto="True"
+            rml="munion_sale/report/partner.rml"
+            header="False"
+            string="Listado de Empresas"/>
+    </data>
+</openerp>
+

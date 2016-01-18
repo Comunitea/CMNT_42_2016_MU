@@ -1,0 +1,428 @@
+<?xml version="1.0"?>
+<document filename="order.pdf">
+  <template pageSize="(21cm,14.8cm)" title="" author="" allowSplitting="20" showBoundary="0">
+    <pageTemplate id="first">
+
+        <!--
+        Definición de marcos del reporte:
+            - body_head: Contendrá el número y fecha del documento, y la dirección.
+            - body_content: Contendrá las líneas de detalle del documento.
+            - body_tail: Contendrá los totales, impuestos y formas de pago.
+        -->
+        <frame id="body_head" x1="1.7cm" y1="9.5cm" height="2.6cm" width="17.7cm"/>
+        <frame id="body_content" x1="1.7cm" y1="3.3cm" height="6.4cm" width="17.7cm"/>
+        <frame id="body_tail" x1="1.7cm" y1="1.7cm" height="1.8cm" width="17.7cm"/>
+
+        <!--
+        Gráficos de la página:
+            Dibuja la cabecera y pié de página, junto con la rejilla
+            usada en la zona de las líneas de detalle.
+        -->
+        <pageGraphics>
+            <!-- 
+            Cabecera de la página
+            -->
+            <setFont name="Helvetica" size="8"/>
+            <fill color="black"/>
+            <stroke color="black"/>
+            <drawRightString x="20cm" y="13.6cm">[[ company.rml_header1 ]]</drawRightString>
+            <!-- Logo (arr.izq.) -->
+            <image x="1.5cm" y="12.6cm" width="1.7cm">[[company.logo]]</image>
+            <!-- Nombre -->
+            <setFont name="Helvetica-Bold" size="16"/>
+            <drawString x="3.2cm" y="13.5cm">[[ company.name ]]</drawString>
+            <!-- CIF -->
+            <setFont name="Helvetica" size="7"/>
+            <drawCentredString x="6.3cm" y="13.0cm">C.I.F. [[ company.partner_id.vat ]]</drawCentredString>
+            <!--Informacion de contacto -->
+            <setFont name="Helvetica" size="9"/>
+            <drawCentredString x="6.3cm" y="12.4cm">[[ '%s (%s)' % (company.partner_id.address and company.partner_id.address[0].street or  '', company.partner_id.address and company.partner_id.address[0].street2 or  '') ]]</drawCentredString>
+            <drawCentredString x="6.3cm" y="12.1cm">[[ company.partner_id.address and company.partner_id.address[0].zip or '' ]] [[ company.partner_id.address and company.partner_id.address[0].city or '' ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name  or '']]</drawCentredString>
+            <drawCentredString x="6.3cm" y="11.7cm">Tel. [[ company.partner_id.address and company.partner_id.address[0].phone or '' ]] - Fax [[ company.partner_id.address and company.partner_id.address[0].fax or '' ]]</drawCentredString>
+            <drawCentredString x="6.3cm" y="11.4cm">E-mail [[ company.partner_id.address and company.partner_id.address[0].email or '' ]]</drawCentredString>
+
+            <!-- 
+            Cuadrícula de las líneas de detalle
+            -->
+            <translate dx="0.0cm"/>
+            <grid xs="1.7cm,4.0cm,13.8cm,15.7cm,17.5cm,19.4cm" ys="3.5cm,8.6cm,9.3cm"/>
+            <translate dx="0.0cm"/>
+
+            <!--
+            Pié de página
+            -->
+            <setFont name="Helvetica" size="8"/>
+            <drawString x="1.7cm" y="0.8cm">[[ company.rml_footer1 ]]</drawString>
+            <drawCentredString x="10.5cm" y="0.8cm">[[ company.rml_footer2 ]]</drawCentredString>
+            <drawRightString x="20cm" y="0.8cm">Página: <pageNumber/></drawRightString>
+        </pageGraphics>
+    </pageTemplate>
+  </template>
+
+  <!--
+  Definición de estilos utilizados a lo largo del reporte
+  -->
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="InvisibleTable">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="InvisibleTableNoPadding">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <blockTopPadding length="0.0"/>
+      <blockLeftPadding length="0.0"/>
+      <blockRightPadding length="0.0"/>
+      <blockBottomPadding length="0.0"/>
+    </blockTableStyle>
+    <blockTableStyle id="InvisibleTableNoPaddingBottomVAlign">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="BOTTOM"/>
+      <blockTopPadding length="0.0"/>
+      <blockLeftPadding length="0.0"/>
+      <blockRightPadding length="0.0"/>
+      <blockBottomPadding length="0.0"/>
+    </blockTableStyle>
+    <blockTableStyle id="GridTable">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="#000000"/>
+    </blockTableStyle>
+    <blockTableStyle id="TableWithHorizontalBorders">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="5,0"/>
+    </blockTableStyle>
+    <blockTableStyle id="TableWithVerticalBorders">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="5,-1"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="Standard" fontName="Times-Roman"/>
+    <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Heading" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Contents" fontName="Times-Roman"/>
+    <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER"/>
+    <paraStyle name="Caption" fontName="Times-Roman" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Times-Roman"/>
+    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Footer" fontName="Times-Roman"/>
+    <paraStyle name="Horizontal Line" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
+    <paraStyle name="Heading 9" fontName="Helvetica-Bold" fontSize="75%" leading="NaN" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_1" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Italic" rightIndent="0.0" leftIndent="20.0" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Preformatted Text" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+  </stylesheet>
+  <images/>
+
+  <!--
+  Contenido de (los marcos del) reporte.
+  -->
+  <story>
+    <!-- Repetimos para cada documento 'o' -->
+    <para style="terp_default_8">[[repeatIn(objects,'o')]]</para>
+    <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
+
+    <!--
+    *** Marco de la cabecera de documento **************************************
+    -->
+    <setNextFrame name="body_head"/>
+    <nextFrame/>
+    <blockTable colWidths="7.7cm,1.1cm,8.9cm" style="InvisibleTableNoPaddingBottomVAlign">
+      <tr>
+        <td>
+            <blockTable colWidths="3.6cm,0.5cm,3.6cm" style="InvisibleTableNoPadding">
+                <tr>
+                    <td>
+                        <!-- 
+                        Recuadro del número del documento
+                        -->
+                        <blockTable colWidths="3.6cm" style="GridTable">
+                            <tr>
+                                <td>
+                                    <para style="terp_default_Centre_9_Bold">[[ o.state=='draft' and 'Presupuesto' or 'Albarán' ]]</para>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <para style="terp_default_Centre_9">[[ o.name ]]<font color="white"> </font></para>
+                                </td>
+                            </tr>
+                        </blockTable>
+                    </td>
+                    <td>
+                        <para style="terp_default_8"><font color="white"> </font></para>
+                    </td>
+                    <td>
+                        <!--
+                        Recuadro de la fecha
+                        -->
+                        <blockTable colWidths="3.6cm" style="GridTable">
+                            <tr>
+                                <td>
+                                    <para style="terp_default_Centre_9_Bold">Fecha</para>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <para style="terp_default_Centre_9">[[ o.date_order and formatLang(o.date_order,date = True) ]]<font color="white"> </font></para>
+                                </td>
+                            </tr>
+                        </blockTable>
+                    </td>
+                </tr>
+            </blockTable>
+        </td>
+        <td>
+          <para style="terp_default_8">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+            <!-- 
+            Recuadro de la dirección del cliente
+            -->
+            <blockTable colWidths="8.9cm" style="GridTable">
+                <tr>
+                    <td>
+                      <para style="terp_default_9">[[ o.partner_order_id.name ]] [[ o.partner_order_id.title or '' ]]</para>
+                      <para style="terp_default_9">N.I.F.: [[ o.partner_id.vat or '' ]]</para>
+                      <para style="terp_default_9">[[ o.partner_order_id.street ]]</para>
+                      <!-- <para style="terp_default_9">[[ o.partner_order_id.street2 or removeParentNode('para') ]]</para> -->
+                      <para style="terp_default_9">[[ o.partner_order_id.zip or '' ]] [[ o.partner_order_id.city or '' ]]</para>
+                      <para style="terp_default_9">[[ o.partner_order_id.state_id and o.partner_order_id.state_id.name or '' ]] [[ o.partner_order_id.country_id and o.partner_order_id.country_id.name or '' ]]</para>
+                    </td>
+                </tr>
+            </blockTable>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+
+
+    <!--
+    *** Marco de las líneas de detalle del documento ***************************
+    -->
+    <setNextFrame name="body_content"/>
+    <nextFrame/>
+    <!-- El contenido puede expandirse por más de una página (pto = please turn over) -->
+    <pto>
+
+        <!--
+        Texto de continuación de página ('continua en')
+        -->
+        <pto_trailer>
+            <setNextFrame name="body_tail"/>
+            <nextFrame/>
+            <para style="terp_tblheader_Details">(continua en la siguiente página...)</para>
+            <nextFrame/>
+            <para style="terp_default_8">
+              <font color="white"> </font>
+            </para>
+            <para style="terp_default_8">
+              <font color="white"> </font>
+            </para>
+            <para style="terp_tblheader_Details">(...continuación [[ o.state=='draft' and 'Presupuesto' or 'Albarán' ]] [[ o.name ]])</para>
+        </pto_trailer>
+
+        <!--
+        Texto de continuación de página ('continuación de')
+        -->
+        <pto_header>
+            <setNextFrame name="body_content"/>
+            <nextFrame/>
+            <para style="terp_default_8">
+              <font color="white"> </font>
+            </para>
+            <!--
+            Cabecera de las líneas de detalle (en página de continuación)
+            -->
+            <blockTable colWidths="2.3cm,9.8cm,1.9cm,1.8cm,1.9cm" repeatRows="1" style="InvisibleTable">
+              <tr>
+                <td>
+                  <para style="terp_tblheader_Details">Cantidad</para>
+                </td>
+                <td>
+                  <para style="terp_tblheader_Details">Descripción</para>
+                </td>
+                <td>
+                  <para style="terp_tblheader_Details_Right">Precio</para>
+                </td>
+                <td>
+                  <para style="terp_tblheader_Details_Right">% Des.</para>
+                </td>
+                <td>
+                  <para style="terp_tblheader_Details_Right">Importe</para>
+                </td>
+              </tr>
+              <tr>
+                  <td><para style="terp_default_Right_9">...</para></td>
+                  <td><para style="terp_default_9">...</para></td>
+                  <td><para style="terp_default_Right_9">...</para></td>
+                  <td><para style="terp_default_Right_9">...</para></td>
+                  <td><para style="terp_default_Right_9">...</para></td>
+              </tr>
+            </blockTable>
+        </pto_header>
+
+        <!--
+        Cabecera de las líneas de detalle (primera página)
+        -->
+        <blockTable colWidths="2.3cm,9.8cm,1.9cm,1.8cm,1.9cm" repeatRows="1" style="InvisibleTable">
+          <tr>
+            <td>
+              <para style="terp_tblheader_Details">Cantidad</para>
+            </td>
+            <td>
+              <para style="terp_tblheader_Details">Descripción</para>
+            </td>
+            <td>
+              <para style="terp_tblheader_Details_Right">Precio</para>
+            </td>
+            <td>
+              <para style="terp_tblheader_Details_Right">% Des.</para>
+            </td>
+            <td>
+              <para style="terp_tblheader_Details_Right">Importe</para>
+            </td>
+          </tr>
+        </blockTable>
+        <!--
+        Líneas de detalle del documento
+        -->
+        <section  height="100%">
+          <!-- Repetimos la sección por cada línea del documento 'line' -->
+          <para style="terp_default_1">[[repeatIn(o.order_line,'line')]]</para>
+          <blockTable colWidths="2.3cm,9.8cm,1.9cm,1.8cm,1.9cm" style="InvisibleTable">
+            <tr>
+              <td>
+                <para style="terp_default_Right_9">[[ formatLang(line.product_uos and line.product_uos_qty or line.product_uom_qty) ]] [[ line.product_uos and line.product_uos.name or line.product_uom.name ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_9">[[ line.name ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_Right_9">[[ formatLang(line.price_unit ) ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_Right_9">[[ formatLang(line.discount) ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_Right_9">[[ formatLang(line.price_subtotal ) ]]</para>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <para style="terp_default_Centre_9"><font color="white"> </font></para>
+              </td>
+              <td>
+                <para style="terp_default_Italic">[[ format(line.notes or removeParentNode('tr')) ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_Right_9"><font color="white"> </font></para>
+              </td>
+              <td>
+                <para style="terp_default_Right_9"><font color="white"> </font></para>
+              </td>
+              <td>
+                <para style="terp_default_Right_9"><font color="white"> </font></para>
+              </td>
+            </tr>
+          </blockTable>
+        </section>
+        
+    </pto>
+
+
+    <!--
+    *** Marco de los totales del documento *************************************
+    -->
+    <setNextFrame name="body_tail"/>
+    <nextFrame/>
+    <!-- Recuadro de los totales -->
+    <blockTable colWidths="6.7cm,7.5cm,3.5cm" style="GridTable">
+        <!--
+        Cabeceras de los totales
+        -->
+        <tr>
+            <td>
+                <!-- Cabecera impuestos -->
+                <blockTable colWidths="3.3cm,3.2cm" style="InvisibleTableNoPadding">
+                    <tr>
+                        <td>
+                            <para style="terp_default_Centre_8">BASE IMPONIBLE</para>
+                        </td>
+                        <td>
+                            <para style="terp_default_Centre_8">IMPUESTOS</para>
+                        </td>
+                    </tr>
+                </blockTable>
+            </td>
+            <td>
+                <!-- Espacio vacío -->
+                <para style="terp_default_8"><font color="white"> </font></para>
+            </td>
+            <td>
+                <!-- Cabecera totales -->
+                <para style="terp_default_Centre_8">TOTAL</para>
+            </td>
+        </tr>
+        <!--
+        Datos de los totales
+        -->
+        <tr>
+            <td>
+                <!-- Datos impuestos -->
+                <blockTable colWidths="3.3cm,3.2cm" style="InvisibleTableNoPadding">
+                    <tr>
+                        <td>
+                            <para style="terp_default_Centre_8">[[ formatLang(o.amount_untaxed ) ]]</para>
+                        </td>
+                        <td>
+                            <para style="terp_default_Centre_8">[[ formatLang(o.amount_tax ) ]]</para>
+                        </td>
+                    </tr>
+                </blockTable>
+            </td>
+            <td>
+                <!-- Espacio vacío -->
+                <para style="terp_default_9"><font color="white"> </font></para>
+            </td>
+            <td>
+                <!-- Datos totales -->
+                <para style="terp_default_Right_9_Bold">[[ formatLang(o.amount_total ) ]] [[ o.pricelist_id.currency_id.name ]]</para>
+            </td>
+        </tr>
+    </blockTable>
+    
+  </story>
+</document>

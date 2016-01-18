@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Modificaciones en la vista partner
+-->
+<openerp>
+    <data>
+
+        <!-- Vista en lista de empresas -->
+        <record id="view_partner_tree" model="ir.ui.view">
+            <field name="name">res.partner.tree.munion</field>
+            <field name="model">res.partner</field>
+            <field name="type">tree</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Partners">
+                    <field name="name" select="1"/>
+                    <field name="ref" select="1"/>
+                    <field name="vat" select="1"/>
+                    <field name="city" select="2"/>
+                    <field name="country" select="2"/>
+                    <field name="phone" select="2"/>
+                    <field name="fax" select="2"/>
+                    <field name="mobile" select="2"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Hacemos que nuestra vista en lista se use en el menú de empresas -->
+        <record id="base.action_partner_form_view1" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_partner_tree"/>
+            <field name="act_window_id" ref="base.action_partner_form"/>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+
+        <!--
+        Extiende la vista en lista de facturas, para que el campo amount_total muestre los totales.
+        -->
+        <record id="view_invoice_tree_show_total" model="ir.ui.view">
+            <field name="name">account.invoice.tree.show_total</field>
+            <field name="model">account.invoice</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="amount_total" position="replace">
+                    <field name="amount_total" sum="Total amount" select="1"/>
+                </field>
+            </field>
+        </record>
+
+
+        <!--
+        Extiende la vista en lista de facturas, para añadir el termino de pago
+        -->
+        <record id="view_invoice_tree_add_payment_term" model="ir.ui.view">
+            <field name="name">account.invoice.tree.add_payment_term</field>
+            <field name="model">account.invoice</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="view_invoice_tree_show_total"/>
+            <field name="arch" type="xml">
+                <field name="date_due" position="after">
+                    <field name="payment_term" search="2"/>
+                </field>
+            </field>
+        </record>
+
+        <!--
+        Extiende la vista de líneas de factura, para mostrar la referencia al (pedido) origen.
+        -->
+        <record id="view_invoice_line_tree_add_origin" model="ir.ui.view">
+            <field name="name">account.invoice.line.tree.add_origin</field>
+            <field name="model">account.invoice.line</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="account.view_invoice_line_tree"/>
+            <field name="arch" type="xml">
+                <field name="price_subtotal" position="after">
+                    <field name="origin" select="2"/>
+                </field>
+            </field>
+        </record>
+
+        <!--
+        Mostrar sólo los clientes en facturas (de cliente)
+        -->
+        <record id="view_invoice_form_customer_domain" model="ir.ui.view">
+            <field name="name">account.invoice.form.customer.domain</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="replace">
+                    <field name="partner_id" domain="[('customer','=', 1)]" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term)" select="1" groups="base.group_user"/>
+                </field>
+            </field>
+        </record>
+
+        <!--
+        Extension / Modificacion de la posicion de determinados campos
+        -->
+
+        <!--
+        Eliminación del campo "Moneda" (mover)
+        -->
+        <record id="view_invoice_form_remove_currency_id" model="ir.ui.view">
+            <field name="name">account.invoice.form.remove_currency_id</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="replace"/>
+            </field>
+        </record>
+
+        <!--
+        Eliminación del campo "Forzar Periodo" (mover)
+        -->
+        <record id="view_invoice_form_remove_period_id" model="ir.ui.view">
+            <field name="name">account.invoice.form.remove_period_id</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="view_invoice_form_remove_currency_id"/>
+            <field name="arch" type="xml">
+                <field name="period_id" position="replace"/>
+            </field>
+        </record>
+
+        <!--
+        Eliminación de la etiqueta "(vacio para periodo actual)"
+        -->
+        <record id="view_invoice_form_remove_period_label" model="ir.ui.view">
+            <field name="name">account.invoice.form.remove_period_label</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="view_invoice_form_remove_period_id"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/group/group/label[@string='(keep empty to use the current period)']" position="replace"/>
+            </field>
+        </record>
+
+
+        <!--
+        Inserción de los campos "Tipo Moneda" y "Forzar Periodo" (mover)
+        tras el campo "Asiento Factura"
+        -->
+        <record id="view_invoice_form_add_currency_id_period_id" model="ir.ui.view">
+            <field name="name">account.invoice.form.add_currency_id_period_id</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="view_invoice_form_remove_period_id"/>
+            <field name="arch" type="xml">
+                <field name="move_id" position="after">
+                    <field name="currency_id"/>
+                    <field name="period_id"/>
+                </field>
+            </field>
+        </record>
+
+        <!--
+        Eliminación del campo "Moneda" (mover) en F. Prov.
+        -->
+        <record id="view_invoice_supplier_form_remove_currency_id" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form.remove_currency_id</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="replace"/>
+            </field>
+        </record>
+
+        <!--
+        Sustitución del campo "Número" por el campo "Moneda" (mover) en F. Prov.
+        -->
+        <record id="view_invoice_supplier_form_replace_number_with_currency_id" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form.replace_number_with_currency_id</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="view_invoice_supplier_form_remove_currency_id"/>
+            <field name="arch" type="xml">
+                <field name="number" position="replace">
+                    <field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
+                </field>
+            </field>
+        </record>
+
+        <!--
+        Inserción del campo "Número" tras el campo "Tipo" en F. Prov.
+        (Reemplazando al campo Moneda antes movido)
+        -->
+        <record id="view_invoice_form_add_number" model="ir.ui.view">
+            <field name="name">account.invoice.form.add_number</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="view_invoice_supplier_form_replace_number_with_currency_id"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="number" select="2"/>
+                </field>
+            </field>
+        </record>
+
+
+
+        <!--
+        Eliminación del campo "Fecha factura" (mover) en F. Prov.
+        -->
+        <record id="view_invoice_supplier_form_remove_date_invoice" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form.remove_date_invoice</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="view_invoice_form_add_number"/>
+            <field name="arch" type="xml">
+                <field name="date_invoice" position="replace"/>
+            </field>
+        </record>
+
+        <!--
+        Sustitución del campo "Cuenta" por el campo "Fecha factura" (mover) en F. Prov.
+        -->
+        <record id="view_invoice_supplier_form_replace_account_id_with_date_invoice" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form.replace_account_id_with_date_invoice</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="view_invoice_supplier_form_remove_date_invoice"/>
+            <field name="arch" type="xml">
+                <field name="account_id" position="replace">
+                    <field name="date_invoice"/>
+                </field>
+            </field>
+        </record>
+
+        <!--
+        Inserción del campo "Cuenta" antes del campo "Fecha vencimiento" en F. Prov.
+        -->
+        <record id="view_invoice_form_add_account_id" model="ir.ui.view">
+            <field name="name">account.invoice.form.add_account_id</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="view_invoice_supplier_form_replace_number_with_currency_id"/>
+            <field name="arch" type="xml">
+                <field name="date_due" position="before">
+                    <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id"/>
+                </field>
+            </field>
+        </record>
+
+
+        <!--
+        Poder buscar por el campo amount_total en F. Prov.
+        -->
+        <record id="view_invoice_form_select_amont_total" model="ir.ui.view">
+            <field name="name">account.invoice.form.add_account_id</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="view_invoice_form_add_account_id"/>
+            <field name="arch" type="xml">
+                <field name="amount_total" position="replace">
+                    <field name="amount_total" select="2"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

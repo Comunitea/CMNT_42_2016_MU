@@ -1,0 +1,43 @@
+=== modified file 'account_financial_report/report/invoice_list.py' (properties changed: -x to +x)
+--- account_financial_report/report/invoice_list.py	2010-08-19 13:35:39 +0000
++++ account_financial_report/report/invoice_list.py	2011-02-16 21:00:33 +0000
+@@ -59,9 +59,38 @@
+             'out_invoices': self.out_invoices,
+             'out_refunds': self.out_refunds,
+             'detailed_taxes': False,
++            'get_taxes_retentions': self._get_taxes_retentions,
+         })
+ 
+ 
++    def _get_taxes_retentions(self, invoices, operation):
++        """
++            Obtenemos los totales de retenciones / impuestos aplicados a las facturas...
++        """
++        total_taxes = 0.0
++        total_retentions = 0.0
++        for invoice in invoices[1]:
++            if invoice.type == 'out_invoice' or invoice.type =='out_refund':
++                #Comprobamos los impuestos o retenciones aplicados a las facturas de cliente...
++                for tax_line in invoice.tax_line:
++                    if '47700' in tax_line.account_id.code:
++                        total_taxes += tax_line.amount
++                    else:
++                        total_retentions += tax_line.amount
++            else:
++                #Son facturas (rectificativas o no) de proveedor...
++                for tax_line in invoice.tax_line:
++                    if '47200' in tax_line.account_id.code:
++                        total_taxes += tax_line.amount
++                    else:
++                        total_retentions += tax_line.amount
++
++        if operation == 'taxes':
++            return total_taxes
++        else:
++            return total_retentions
++
++
+     def set_context(self, objects, data, ids, report_type = None):
+         """We do the grouping and proccessing of invoices"""
+         invoice_obj = self.pool.get('account.invoice')
+
