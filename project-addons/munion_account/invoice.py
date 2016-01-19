@@ -31,17 +31,6 @@ from osv import osv
 import netsvc
 import re
 
-class account_invoice(osv.osv):
-    """
-    Extensión del objeto de facturas para establecer
-    el orden inverso por número de factura.
-    """
-    _inherit = "account.invoice"
-    _order = "number desc"
-
-account_invoice()
-
-
 
 class account_invoice_line(osv.osv):
     """
@@ -50,12 +39,12 @@ class account_invoice_line(osv.osv):
     """
     _inherit = 'account.invoice.line'
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, context=None):
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None, company_id=None):
         """
         Sobreescribe product_id_change para:
             - Establecer el descuento del producto por defecto según el cliente.
         """
-        result = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, context)
+        result = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context, company_id)
 
         #
         # Establecer el descuento del producto por defecto según el cliente.
@@ -68,23 +57,4 @@ class account_invoice_line(osv.osv):
 
         return result
 
-
-    def _default_tax_id(self, cr, uid, context=None):
-        """
-        Método que devuelve los impuestos por defecto (16%).
-        """
-        if context is None: context = {}
-        tax_ids = self.pool.get('account.tax').search(cr, uid, [
-                ('name', '=', 'IVA 16%'),
-                ('parent_id', '=', False),
-                ('type_tax_use', '<>', 'purchase')
-            ])
-        if len(tax_ids):
-            return tax_ids
-        else:
-            return None
-
-    _defaults = {
-        'invoice_line_tax_id': _default_tax_id,
-    }
 account_invoice_line()

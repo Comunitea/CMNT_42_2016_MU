@@ -39,6 +39,7 @@ class sale_order(osv.osv):
     (se ejecutan automáticamente los procurements de servicios).
     """
     _inherit = "sale.order"
+    _order = "date_order desc"
 
     #
     # Modificamos los valores por defecto
@@ -134,7 +135,7 @@ class sale_order_line(osv.osv):
         else:
             return None
 
-        
+
     _defaults = {
         'product_uom': _default_product_uom,
         'tax_id': _default_tax_id,

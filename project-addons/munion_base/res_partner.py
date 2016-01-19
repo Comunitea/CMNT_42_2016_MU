@@ -21,7 +21,7 @@
 ##############################################################################
 
 """
-Extiende las empresas (partner) para añadir campos 
+Extiende las empresas (partner) para añadir campos
 específicos de Mecanizados Unión.
 """
 
@@ -40,9 +40,7 @@ class res_partner(osv.osv):
     #
 
     _columns = {
-            'phone': fields.related('address', 'phone', type='char', string='Teléfono'),
             'fax': fields.related('address', 'fax', type='char', string='Fax'),
-            'mobile': fields.related('address', 'mobile', type='char', string='Móvil')
      }
 
 

@@ -33,7 +33,6 @@
         "demo_xml" : [ ],
         "update_xml" : [
                         'res_partner_view.xml',
-                        'sale_menus.xml',
                         ],
         "installable": True
 }

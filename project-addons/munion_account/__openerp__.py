@@ -26,13 +26,7 @@
         "update_xml" : [
                         'account_invoice_view.xml',
                         'payment_view.xml',
-                        'account_invoice_menus.xml',
-                        'account_move_menu.xml'
-                        # Nota: Las dos siguientes líneas son inecesarias
-                        # si se instala el módulo account_financial_report,
-                        # que ya recoge informes basados en estos mismos :)
-                        #'account_move_line_report.xml',
-                        #'account_move_line_record_report.xml',
+                        'account_invoice_menus.xml'
                         ],
         "installable": True
 }
