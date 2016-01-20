@@ -77,7 +77,7 @@ class sale_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False):
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
         """
         Sobreescribe product_id_change para:
             - Eliminar el código del producto de la descripción automática.
@@ -86,7 +86,7 @@ class sale_order_line(osv.osv):
 
         result = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
                 uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
-                lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag)
+                lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
 
         #
         # Eliminar el código del producto de la descripción automática.
@@ -102,44 +102,6 @@ class sale_order_line(osv.osv):
             result['value']['discount'] = partner_obj.browse(cr, uid, partner_id).sale_discount
 
         return result
-
-
-
-
-
-
-    def _default_product_uom(self, cr, uid, context=None):
-        """
-        Método que devuelve el product_uom por defecto (Unidad/PCE).
-        """
-        if context is None: context = {}
-        product_uom_ids = self.pool.get('product.uom').search(cr, uid, [('name', '=', 'PCE')])
-        if len(product_uom_ids)>0:
-            return product_uom_ids[0]
-        else:
-            return None
-
-
-    def _default_tax_id(self, cr, uid, context=None):
-        """
-        Método que devuelve los impuestos por defecto (16%).
-        """
-        if context is None: context = {}
-        tax_ids = self.pool.get('account.tax').search(cr, uid, [
-                ('name', '=', 'IVA 16%'),
-                ('parent_id', '=', False),
-                ('type_tax_use', '<>', 'purchase')
-            ])
-        if len(tax_ids):
-            return tax_ids
-        else:
-            return None
-
-
-    _defaults = {
-        'product_uom': _default_product_uom,
-        'tax_id': _default_tax_id,
-    }
 
 sale_order_line()
 
