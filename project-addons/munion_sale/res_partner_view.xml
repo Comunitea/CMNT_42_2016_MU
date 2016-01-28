@@ -13,5 +13,42 @@
             </field>
         </record>
 
+        <record id="sale_order_tree_current_year" model="ir.actions.act_window">
+            <field name="name">Pedidos de venta actuales</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain">[('date_order','>=',time.strftime('%Y-01-01'))]</field>
+        </record>
+
+        <menuitem id="menu_sale_order_tree_current_year"
+            parent="sale.menu_sale_order"
+            action="sale_order_tree_current_year"/>
+
+        <record id="view_order_form_rep_name" model="ir.ui.view">
+            <field name="name">sale.order.form.rep_name</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/form//field[@name='name']" position="replace">
+                    <separator string="Descripción" colspan="6"/>
+                    <field name="name" colspan="6" nolabel="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_sales_order_filter_add_date_order" model="ir.ui.view">
+            <field name="name">sale.order.list.select.add_date_order</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="date_order"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>

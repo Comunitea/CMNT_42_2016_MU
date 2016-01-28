@@ -28,7 +28,7 @@ ciertas opciones por defecto, y para simplificar el flujo de venta
 """
 __author__ = "Borja López Soilán (Pexego)"
 
-from osv import osv
+from osv import osv, fields
 import netsvc
 import re
 
@@ -102,6 +102,11 @@ class sale_order_line(osv.osv):
             result['value']['discount'] = partner_obj.browse(cr, uid, partner_id).sale_discount
 
         return result
+
+    _columns = {
+        'name': fields.text('Order Reference', required=True, select=True,
+            readonly=True, states={'draft': [('readonly', False)]})
+     }
 
 sale_order_line()
 
