@@ -22,7 +22,7 @@
             - Configura las sequencias (series) de ventas/pedidos y picking/albaranes.
             - Añade menús de órdenes de venta del año actual.
             """,
-        "depends" : [ 'base', 'sale' ],
+        "depends" : [ 'base', 'sale', 'account'],
         "init_xml" : [
                         "default_data.xml",
                         "sale_sequence.xml",

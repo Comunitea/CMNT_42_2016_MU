@@ -45,3 +45,18 @@ class res_partner(osv.osv):
 
 
 res_partner()
+
+
+class mail_compose_message(osv.osv_memory):
+
+    _inherit = 'mail.compose.message'
+
+    def get_value(self, cr, uid, model, res_id, context=None):
+        res = super(mail_compose_message, self).get_value(cr, uid, model, res_id, context=context)
+        if model == "res.partner":
+            partner = self.pool.get(model).browse(cr, uid, res_id)
+            if partner.email:
+                res['email_to'] = partner.email
+        return res
+
+mail_compose_message()

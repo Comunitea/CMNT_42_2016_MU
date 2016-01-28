@@ -13,11 +13,11 @@
         "category" : "Enterprise Specific Modules",
         "description": """
             Personalización base para Mecanizados Unión.
-            
+
             - Añade columnas de teléfono y fax a empresas.
             - Añade asistente para imprimir cartas a direcciones.
             """,
-        "depends" : [ 'base'],
+        "depends" : ['base', 'mail'],
         "init_xml" : [ ],
         "demo_xml" : [ ],
         "update_xml" : [

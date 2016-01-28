@@ -110,3 +110,15 @@ class sale_order_line(osv.osv):
 
 sale_order_line()
 
+
+class sale_shop(osv.osv):
+
+    _inherit = "sale.shop"
+
+    _columns = {
+        'account_ids': fields.many2many('account.account', 'sale_shop_account',
+                                        'shop_id', 'account_id',
+                                        string="Cuentas asociadas")
+    }
+
+sale_shop()

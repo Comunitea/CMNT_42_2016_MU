@@ -35,6 +35,9 @@
                     <separator string="Descripción" colspan="6"/>
                     <field name="name" colspan="6" nolabel="1"/>
                 </xpath>
+                <field name="shop_id" position="attributes">
+                    <attribute name="widget">many2one</attribute>
+                </field>
             </field>
         </record>
 
@@ -46,6 +49,18 @@
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
                     <field name="date_order"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_shop_form_add_accounts" model="ir.ui.view">
+            <field name="name">sale.shop.add_accounts</field>
+            <field name="model">sale.shop</field>
+            <field name="inherit_id" ref="sale.view_shop_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="project_id" position="after">
+                    <field name="account_ids" nolabel="1" colspan="4"/>
                 </field>
             </field>
         </record>
