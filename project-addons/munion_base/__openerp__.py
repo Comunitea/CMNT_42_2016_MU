@@ -17,7 +17,8 @@
             - Añade columnas de teléfono y fax a empresas.
             - Añade asistente para imprimir cartas a direcciones.
             """,
-        "depends" : ['base', 'mail'],
+        "depends" : ['base', 'mail', 'account_financial_report_webkit',
+                     'account_financial_report_webkit_xls'],
         "init_xml" : [ ],
         "demo_xml" : [ ],
         "update_xml" : [
