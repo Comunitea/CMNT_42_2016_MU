@@ -426,7 +426,7 @@
             </td>
             <td>
                 <!-- Cabecera formas de pago -->
-                <blockTable colWidths="2.5cm,2.5cm,3.6cm" style="InvisibleTableNoPadding">
+                <blockTable colWidths="2.5cm,2.0cm,4.1cm" style="InvisibleTableNoPadding">
                     <tr>
                         <td>
                             <para style="terp_default_Centre_8">FORMA DE PAGO</para>
@@ -479,7 +479,7 @@
             </td>
             <td>
                 <!-- Datos formas de pago -->
-                <blockTable colWidths="2.5cm,2.5cm,3.6cm" style="InvisibleTableNoPadding">
+                <blockTable colWidths="2.3cm,2.0cm,4.3cm" style="InvisibleTableNoPadding">
                     <tr>
                         <td>
                             <para style="terp_default_Centre_7">[[ o.payment_type and format((o.payment_type.name)) or removeParentNode('para') ]]</para>
@@ -497,8 +497,7 @@
                         <td>
                             <para style="terp_default_Centre_7">[[ o.payment_type and o.payment_type.code!='TRANSF' and o.partner_bank_id and o.partner_bank_id.bank_name or removeParentNode('para') ]]</para>
                             <para style="terp_default_Centre_7">[[ o.payment_type and o.payment_type.code!='TRANSF' and o.partner_bank_id and o.partner_bank_id.iban or removeParentNode('para') ]]</para>
-                            <para style="terp_default_Centre_7">[[ o.payment_type and o.payment_type.code=='TRANSF' and company.partner_id.bank_ids[0] and company.partner_id.bank_ids[0].bank_name or removeParentNode('para') ]]</para>
-                            <para style="terp_default_Centre_7">[[ o.payment_type and o.payment_type.code=='TRANSF' and company.partner_id.bank_ids[0] and company.partner_id.bank_ids[0].iban or removeParentNode('para') ]]</para>
+                            <para style="terp_default_Centre_7">[[ o.payment_type and o.payment_type.code=='TRANSF' and o.payment_type.note or removeParentNode('para') ]]</para>
                         </td>
                     </tr>
                 </blockTable>

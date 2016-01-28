@@ -33,5 +33,31 @@
             </field>
         </record>
 
+        <record id="invoice_supplier_form_rep_origin" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form.rep_origin</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="origin" position="replace"/>
+                <field name="date_due" position="after">
+                    <field name="origin"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="invoice_form_rep_origin" model="ir.ui.view">
+            <field name="name">account.invoice.form.rep_origin</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="origin" position="replace"/>
+                <field name="name" position="after">
+                    <field name="origin"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>

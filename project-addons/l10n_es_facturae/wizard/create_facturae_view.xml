@@ -10,10 +10,10 @@
                 <form string="Create Factura-E">
                     <label string="Do you want to Create Factura-E?" colspan="4"/>
                     <field name="state" invisible="1"/>
-                    <group attrs="{'invisible': [('state', '=', 'first')]}" colspan="4">
-                        <field name="facturae" filename="facturae_fname"/>
+                    <group colspan="4">
+                        <field name="facturae" filename="facturae_fname" readonly="1"/>
                         <field name="facturae_fname" invisible="1"/>
-                        <field name="note" colspan="4" nolabel="1"/>
+                        <field name="note" colspan="4" nolabel="1" readonly="1"/>
                     </group>
                     <group colspan="4">
                         <button icon="gtk-cancel" special="cancel" string="Close"/>
