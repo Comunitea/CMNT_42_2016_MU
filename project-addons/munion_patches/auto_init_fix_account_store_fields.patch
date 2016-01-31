@@ -1,0 +1,54 @@
+=== modified file 'account/account_move_line.py'
+--- account/account_move_line.py	2014-04-23 06:12:15 +0000
++++ account/account_move_line.py	2016-01-29 18:06:26 +0000
+@@ -563,13 +563,14 @@
+     ]
+ 
+     def _auto_init(self, cr, context=None):
+-        super(account_move_line, self)._auto_init(cr, context=context)
++        res = super(account_move_line, self)._auto_init(cr, context=context)
+         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'account_move_line_journal_id_period_id_index\'')
+         if not cr.fetchone():
+             cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index ON account_move_line (journal_id, period_id)')
+         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('account_move_line_date_id_index',))
+         if not cr.fetchone():
+             cr.execute('CREATE INDEX account_move_line_date_id_index ON account_move_line (date DESC, id desc)')
++        return res
+ 
+     def _check_no_view(self, cr, uid, ids, context=None):
+         lines = self.browse(cr, uid, ids, context=context)
+@@ -1269,7 +1270,7 @@
+                 raise osv.except_osv(_('Encoding error'), _('No period found or more than one period found for the given date.'))
+             context['period_id'] = period_candidate_ids[0][0]
+         if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
+-            context['journal_id'] = context.get('search_default_journal_id')            
++            context['journal_id'] = context.get('search_default_journal_id')
+         self._update_journal_check(cr, uid, context['journal_id'], context['period_id'], context)
+         move_id = vals.get('move_id', False)
+         journal = journal_obj.browse(cr, uid, context['journal_id'], context=context)
+
+=== modified file 'account_payment/wizard/account_payment_order.py'
+--- account_payment/wizard/account_payment_order.py	2011-10-16 01:28:00 +0000
++++ account_payment/wizard/account_payment_order.py	2016-01-29 17:48:48 +0000
+@@ -119,4 +119,4 @@
+ 
+ payment_order_create()
+ 
+-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+\ No newline at end of file
++# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+=== modified file 'base_contact/base_contact.py'
+--- base_contact/base_contact.py	2013-09-10 15:12:35 +0000
++++ base_contact/base_contact.py	2016-01-29 18:06:50 +0000
+@@ -137,7 +137,8 @@
+             return bool(value == 1)
+ 
+         exists = table_exists(self._table)
+-        super(res_partner_location, self)._auto_init(cr, context)
++        res = super(res_partner_location, self)._auto_init(cr, context)
++        return res
+ 
+         if not exists:
+             cr.execute("""
+

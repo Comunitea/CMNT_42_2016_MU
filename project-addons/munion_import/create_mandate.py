@@ -12,7 +12,7 @@ class create_mandate(object):
         try:
             self.url_template = "http://%s:%s/xmlrpc/%s"
             self.server = "localhost"
-            self.port = 9069
+            self.port = 8069
             self.dbname = dbname
             self.user_name = user
             self.user_passwd = passwd

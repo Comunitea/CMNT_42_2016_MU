@@ -1,0 +1,210 @@
+diff --git a/l10n_es_fiscal_year_closing/wizard/wizard_run.py b/l10n_es_fiscal_year_closing/wizard/wizard_run.py
+index e2c1c9e..7273b69 100644
+--- a/l10n_es_fiscal_year_closing/wizard/wizard_run.py
++++ b/l10n_es_fiscal_year_closing/wizard/wizard_run.py
+@@ -31,14 +31,14 @@ from osv import fields
+ from osv import osv
+ 
+ class cancel_fyc(osv.osv_memory):
+-    
++
+     _name="cancel.fyc"
+     _description="Cancel the Fiscal Year Closing"
+     _columns = {
+                 'delete_pyg':fields.boolean('Delete P&L'),
+                 'delete_net_pyg':fields.boolean('Delete Net P&L'),
+                 'delete_close':fields.boolean('Delete Close'),
+-                'delete_open':fields.boolean('Delete Open'),               
++                'delete_open':fields.boolean('Delete Open'),
+                 }
+ 
+     def view_init(self, cr, uid, fields, context=None):
+@@ -56,7 +56,7 @@ class cancel_fyc(osv.osv_memory):
+                 }, context=context)
+ 
+         return True
+-    
++
+     def default_get(self, cr, uid, fields, context=None):
+         """
+         This function gets default values
+@@ -77,7 +77,7 @@ class cancel_fyc(osv.osv_memory):
+             res['delete_close'] = bool(fyc.closing_move_id)
+             res['delete_open'] = bool(fyc.opening_move_id)
+         return res
+-        
++
+     def _remove_move(self, cr, uid, move, context):
+         """
+         Remove an account move, removing reconciles if any
+@@ -102,7 +102,7 @@ class cancel_fyc(osv.osv_memory):
+         obj_move.unlink(cr, uid, [move.id], context)
+ 
+         return move.id
+-    
++
+     def cancel_run(self, cr, uid, data, context=None):
+         try:
+             # If the wizard is in cancel mode, run the objects cancel action
+@@ -142,24 +142,24 @@ class cancel_fyc(osv.osv_memory):
+ cancel_fyc()
+ 
+ class execute_fyc(osv.osv_memory):
+-    
++
+     _name='execute.fyc'
+     _description="Execute the Fiscal Year Closing"
+-    
++
+     _columns = {
+                 'delete_pyg':fields.boolean('Delete P&L'),
+                 'delete_net_pyg':fields.boolean('Delete Net P&L'),
+                 'delete_close':fields.boolean('Delete Close'),
+-                'delete_open':fields.boolean('Delete Open'), 
++                'delete_open':fields.boolean('Delete Open'),
+                 'create_pyg':fields.boolean('Create P&L'),
+                 'create_net_pyg':fields.boolean('Create Net P&L'),
+                 'create_close':fields.boolean('Create Close'),
+-                'create_open':fields.boolean('Create Open'), 
++                'create_open':fields.boolean('Create Open'),
+                 'check_draft':fields.boolean('Check Draft'),
+-                'check_unbalanced':fields.boolean('Check Unbalanced Moves'),  
+-                'check_invalid':fields.boolean('Check Invalid Periods or Date Moves'),             
++                'check_unbalanced':fields.boolean('Check Unbalanced Moves'),
++                'check_invalid':fields.boolean('Check Invalid Periods or Date Moves'),
+                 }
+-    
++
+     def default_get(self, cr, uid, fields, context=None):
+         """
+         This function gets default values
+@@ -185,7 +185,7 @@ class execute_fyc(osv.osv_memory):
+                 if fyc.create_loss_and_profit and (not fyc.loss_and_profit_move_id):
+                     bool11=True
+                 res.update({'create_pyg': bool11})
+-                
++
+             if 'delete_net_pyg' in fields:
+                 bool2=False
+                 if (not fyc.create_net_loss_and_profit) and fyc.net_loss_and_profit_move_id:
+@@ -196,7 +196,7 @@ class execute_fyc(osv.osv_memory):
+                 if (not fyc.net_loss_and_profit_move_id) and fyc.create_net_loss_and_profit:
+                     bool21=True
+                 res.update({'create_net_pyg':bool21 })
+-                
++
+             if 'delete_close' in fields:
+                 bool3=False
+                 if fyc.closing_move_id and (not fyc.create_closing):
+@@ -206,8 +206,8 @@ class execute_fyc(osv.osv_memory):
+                 bool31=False
+                 if (not fyc.closing_move_id) and fyc.create_closing:
+                     bool31=True
+-                res.update({'create_close': bool31})    
+-                
++                res.update({'create_close': bool31})
++
+             if 'delete_open' in fields:
+                 bool4=False
+                 if fyc.opening_move_id and (not fyc.create_opening):
+@@ -218,23 +218,23 @@ class execute_fyc(osv.osv_memory):
+                 if (not fyc.opening_move_id) and fyc.create_opening:
+                     bool41=True
+                 res.update({'create_open': bool41})
+-                
+-                 
++
++
+             if 'check_draft' in fields:
+                 bool5=False
+                 if fyc.check_draft_moves:
+                     bool5=True
+-                res.update({'check_draft': bool5}) 
++                res.update({'check_draft': bool5})
+             if 'check_unbalanced' in fields:
+                 bool6=False
+                 if fyc.check_unbalanced_moves:
+                     bool6=True
+-                res.update({'check_unbalanced': bool6}) 
++                res.update({'check_unbalanced': bool6})
+             if 'check_invalid' in fields:
+                 bool7=False
+                 if fyc.check_invalid_period_moves:
+                     bool7=True
+-                res.update({'check_invalid': bool7}) 
++                res.update({'check_invalid': bool7})
+         return res
+ 
+     def remove_move(self, cr, uid, operation, fyc, context):
+@@ -505,12 +505,11 @@ class execute_fyc(osv.osv_memory):
+             # Find its children accounts (recursively)
+             # FIXME: _get_children_and_consol is a protected member of account_account, but the OpenERP code base uses it like this :(
+             child_ids = pool.get('account.account')._get_children_and_consol(cr, uid, [account_map.source_account_id.id], ctx)
+-            
++
+             # For each children account. (Notice the context filter! the computed balanced is based on this filter)
+             for account in pool.get('account.account').browse(cr, uid, child_ids, ctx):
+                 # Check if the children account needs to (and can) be closed
+-                if (account.type != 'view' and not float_is_zero(
+-                        account.balance, precision_rounding=precision)):
++                if (account.type != 'view' and account.balance):
+                     if account.user_type.close_method == 'balance':
+                         # Compute the balance for the account (uses the previous browse context filter)
+                         balance = account.balance
+@@ -528,8 +527,8 @@ class execute_fyc(osv.osv_memory):
+                         if account_map.dest_account_id:
+                             dest_accounts_totals[account_map.dest_account_id.id] -= balance
+                     elif account.user_type.close_method == 'unreconciled':
+-                        move_line_obj = pool.get('account.move.line') 
+-                        found_lines = move_line_obj.search(cr, uid, [ 
++                        move_line_obj = pool.get('account.move.line')
++                        found_lines = move_line_obj.search(cr, uid, [
+                             ('period_id', 'in', period_ids),
+                             ('account_id', '=', account.id),
+                             ('company_id', '=', company_id),
+@@ -543,8 +542,7 @@ class execute_fyc(osv.osv_memory):
+                                 lines_by_partner[line.partner_id.id] = balance
+                         for partner_id in lines_by_partner.keys():
+                             balance = lines_by_partner[partner_id]
+-                            if not float_is_zero(balance,
+-                                                 precision_rounding=precision):
++                            if balance:
+                                 move_lines.append({
+                                     'account_id': account.id,
+                                     'debit': balance<0 and -balance,
+@@ -666,7 +664,7 @@ class execute_fyc(osv.osv_memory):
+         else:
+             assert operation in ('open'), "The operation must be a supported one"
+         return move_id
+-    
++
+     def execute_run(self, cr, uid, data, context=None):
+         """
+         Creates / removes FYC entries
+@@ -678,7 +676,7 @@ class execute_fyc(osv.osv_memory):
+             # If the wizard is in cancel mode, run the objects cancel action
+             # to let it undo the confirmation action, before running the wizard.
+             #
+-    
++
+             # Read the object
+             fyc = pool.get('l10n_es_fiscal_year_closing.fyc').browse(cr, uid, context['active_id'], context=context)
+ 
+@@ -704,7 +702,7 @@ class execute_fyc(osv.osv_memory):
+             if (fyc.create_opening and not fyc.opening_move_id) \
+                 or ((not fyc.create_opening) and fyc.opening_move_id):
+                 total_operations += 1
+-                
++
+             if total_operations > 0:
+ 
+                 #
+@@ -745,7 +743,7 @@ class execute_fyc(osv.osv_memory):
+                 #
+                 if fyc.create_net_loss_and_profit and not fyc.net_loss_and_profit_move_id:
+                     self.create_closing_move(cr, uid, 'net_loss_and_profit', fyc, context)
+-                    
++
+                 #
+                 # Remove the Net L&P move if needed
+                 #

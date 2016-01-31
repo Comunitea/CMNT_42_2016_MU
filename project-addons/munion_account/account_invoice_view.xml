@@ -59,5 +59,17 @@
             </field>
         </record>
 
+        <record id="view_account_move_line_filter_rep_account" model="ir.ui.view">
+            <field name="name">Journal Items</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <field name="account_id" position="replace">
+                    <field name="account_id" filter_domain="[('account_id', 'child_of', self)]"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>
