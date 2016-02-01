@@ -58,3 +58,51 @@ class account_invoice_line(osv.osv):
         return result
 
 account_invoice_line()
+
+
+class account_invoice(osv.osv):
+
+    _inherit = "account.invoice"
+
+    def onchange_partner_id(self, cr, uid, ids, type, partner_id,\
+            date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
+        res = super(account_invoice, self).onchange_partner_id(cr, uid, ids, type, partner_id, date_invoice=date_invoice, payment_term=payment_term, partner_bank_id=partner_bank_id, company_id=company_id)
+        if res.get('value', False) and res['value'].get('partner_bank_id', False):
+            mandate_ids = self.pool.get('sdd.mandate').search(cr, uid, [('partner_bank_id', '=', res['value']['partner_bank_id']), ('state', '=', 'valid')])
+            res['value']['sdd_mandate_id'] = mandate_ids and mandate_ids[0] or False
+
+        return res
+
+    def create(self, cr, uid, vals, context=None):
+        if context is None: context = {}
+        invoice_id = super(account_invoice, self).create(cr, uid, vals, context=context)
+        if vals.get('partner_bank_id', False) and not vals.get('sdd_mandate_id', False):
+            mandate_ids = self.pool.get('sdd.mandate').search(cr, uid, [('partner_bank_id', '=', vals['partner_bank_id']), ('state', '=', 'valid')])
+            if mandate_ids:
+                self.write(cr, uid, [invoice_id], {
+                    'sdd_mandate_id': mandate_ids[0]
+                })
+
+        return invoice_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None: context = {}
+        if vals.get('partner_bank_id', False) and not vals.get('sdd_mandate_id', False):
+            mandate_ids = self.pool.get('sdd.mandate').search(cr, uid, [('partner_bank_id', '=', vals['partner_bank_id']), ('state', '=', 'valid')])
+            if mandate_ids:
+                vals['sdd_mandate_id'] = mandate_ids[0]
+        return super(account_invoice, self).write(cr, uid, ids, vals, context=context)
+
+    def onchange_partner_bank(self, cr, uid, ids, partner_bank_id=False):
+        res = super(account_invoice, self).onchange_partner_bank(cr, uid, ids, partner_bank_id=partner_bank_id)
+        if partner_bank_id:
+            mandate_ids = self.pool.get('sdd.mandate').search(cr, uid, [('partner_bank_id', '=', partner_bank_id), ('state', '=', 'valid')])
+            if mandate_ids:
+                res['value']['sdd_mandate_id'] = mandate_ids[0]
+            else:
+                res['value']['sdd_mandate_id'] = False
+            res['value']['partner_bank_id'] = partner_bank_id
+        else:
+            res['value']['sdd_mandate_id'] = False
+
+        return res

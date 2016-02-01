@@ -20,7 +20,8 @@
             - Añade menús de facturas del año actual.
             - Personaliza las vistas de factura y factura de proveedor.
             """,
-        "depends" : [ 'base', 'account', 'account_payment_extension'],
+        "depends" : [ 'base', 'account', 'account_payment_extension',
+                     'account_payment_sepa_direct_debit'],
         "init_xml" : [ ],
         "demo_xml" : [ ],
         "update_xml" : [
