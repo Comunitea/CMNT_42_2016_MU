@@ -27,7 +27,7 @@ ciertas opciones por defecto (el orden).
 """
 __author__ = "Borja López Soilán (Pexego)"
 
-from osv import osv
+from osv import osv, fields
 import netsvc
 import re
 
@@ -56,6 +56,10 @@ class account_invoice_line(osv.osv):
                 result['value']['discount'] = partner_obj.browse(cr, uid, partner_id).sale_discount
 
         return result
+
+    _columns = {
+        'name': fields.text('Description', required=True)
+    }
 
 account_invoice_line()
 

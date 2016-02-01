@@ -38,6 +38,16 @@
                 <field name="shop_id" position="attributes">
                     <attribute name="widget">many2one</attribute>
                 </field>
+                <xpath expr="//field[@name='order_line']/form//separator[@string='Notes']" position="replace"/>
+                <xpath expr="//field[@name='order_line']/form//field[@name='notes']" position="replace"/>
+                <xpath expr="//field[@name='order_line']/form//page[@string='Extra Info']" position="before">
+                    <page string="Notes">
+                        <field name="notes" colspan="4" nolabel="1"/>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/form//field[@name='product_packaging']" position="replace"/>
+                <xpath expr="//field[@name='order_line']/form//newline" position="replace"/>
+                <xpath expr="//field[@name='order_line']/form//separator[@string='States']" position="replace"/>
             </field>
         </record>
 

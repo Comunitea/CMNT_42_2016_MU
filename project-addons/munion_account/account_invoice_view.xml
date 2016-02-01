@@ -18,6 +18,18 @@
             </field>
         </record>
 
+        <record id="view_account_invoice_filter_add_date" model="ir.ui.view">
+            <field name="name">account.invoice.select.add_date</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="date_invoice"/>
+                </field>
+            </field>
+        </record>
+
         <!--
         Extiende la vista de líneas de factura, para mostrar la referencia al (pedido) origen.
         -->
@@ -42,6 +54,33 @@
                 <field name="origin" position="replace"/>
                 <field name="date_due" position="after">
                     <field name="origin"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_invoice_line_form_rp_view" model="ir.ui.view">
+            <field name="name">account.invoice.line.form.rp_view</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account.view_invoice_line_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="note" position="replace"/>
+                <separator string="Taxes" position="replace"/>
+                <field name="invoice_line_tax_id" position="replace"/>
+                <separator string="Notes" position="replace"/>
+                <field name="company_id" position="after">
+                    <notebook colspan="4">
+                        <page string="Impuestos">
+                            <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]" nolabel="1"/>
+                        </page>
+                        <page string="Notas">
+                            <field colspan="4" name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </field>
+                <field name="name" position="replace">
+                    <separator string="Descripción" colspan="4"/>
+                    <field name="name" nolabel="1" colspan="4"/>
                 </field>
             </field>
         </record>
