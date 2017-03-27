@@ -15,6 +15,7 @@
                         <field name="organo_gestor" attrs="{'invisible': [('facturae', '=', False)], 'required': [('facturae', '=', True)]}"/>
                         <field name="unidad_tramitadora" attrs="{'invisible': [('facturae', '=', False)], 'required': [('facturae', '=', True)]}"/>
                         <field name="oficina_contable" attrs="{'invisible': [('facturae', '=', False)], 'required': [('facturae', '=', True)]}"/>
+                        <field name="sef" attrs="{'invisible': [('facturae', '=', False)]}"/>
                     </group>
                 </xpath>
             </field>
@@ -33,6 +34,7 @@
                         <field name="organo_gestor" attrs="{'invisible': [('facturae', '=', False)], 'required': [('facturae', '=', True)]}"/>
                         <field name="unidad_tramitadora" attrs="{'invisible': [('facturae', '=', False)], 'required': [('facturae', '=', True)]}"/>
                         <field name="oficina_contable" attrs="{'invisible': [('facturae', '=', False)], 'required': [('facturae', '=', True)]}"/>
+                        <field name="sef" attrs="{'invisible': [('facturae', '=', False)]}"/>
                     </group>
                 </xpath>
             </field>

@@ -170,7 +170,7 @@ class create_facturae(osv.osv_memory):
             texto += '<SellerParty>'
             texto += '<TaxIdentification>'
             texto += '<PersonTypeCode>' + tipo_seller + '</PersonTypeCode>'
-            texto += '<ResidenceTypeCode>U</ResidenceTypeCode>'
+            texto += '<ResidenceTypeCode>R</ResidenceTypeCode>'
             texto += '<TaxIdentificationNumber>' + company_partner_obj.vat + '</TaxIdentificationNumber>'
             texto += '</TaxIdentification>'
 
@@ -248,7 +248,7 @@ class create_facturae(osv.osv_memory):
             texto += '<BuyerParty>'
             texto += '<TaxIdentification>'
             texto += '<PersonTypeCode>' + tipo_buyer + '</PersonTypeCode>'
-            texto += '<ResidenceTypeCode>U</ResidenceTypeCode>'
+            texto += '<ResidenceTypeCode>R</ResidenceTypeCode>'
             texto += '<TaxIdentificationNumber>' + invoice_partner_obj.vat + '</TaxIdentificationNumber>'
             texto += '</TaxIdentification>'
 
@@ -263,8 +263,10 @@ class create_facturae(osv.osv_memory):
                 texto = ""
                 if administrative:
                     texto += "<AdministrativeCentre>"
-                    if code == '01':
+                    if code == '01' and not address.sef:
                         texto += "<CentreCode>" + address.oficina_contable + "</CentreCode>"
+                    elif code == '01' and address.sef:
+                        texto += "<CentreCode>" + address.sef + "</CentreCode>"
                     elif code == '02':
                         texto += "<CentreCode>" + address.organo_gestor + "</CentreCode>"
                     elif code == '03':
@@ -325,9 +327,10 @@ class create_facturae(osv.osv_memory):
 
             if administrative:
                 texto += create_administrative_centres(invoice_partner_address_obj, "01") # Oficina contable
-                texto += create_administrative_centres(contact_partner_address_obj or invoice_partner_address_obj, "02") # Órgano Gestor
-                texto += create_administrative_centres(invoice_partner_address_obj, "03") # Unidad tramitadora
-                texto += create_administrative_centres(contact_partner_address_obj or invoice_partner_address_obj, "04") # Órgano proponente
+                if not invoice_partner_address_obj.sef:
+                    texto += create_administrative_centres(contact_partner_address_obj or invoice_partner_address_obj, "02") # Órgano Gestor
+                    texto += create_administrative_centres(invoice_partner_address_obj, "03") # Unidad tramitadora
+                    texto += create_administrative_centres(contact_partner_address_obj or invoice_partner_address_obj, "04") # Órgano proponente
                 texto += "</AdministrativeCentres>"
 
             if tipo_buyer == 'F':
@@ -354,12 +357,10 @@ class create_facturae(osv.osv_memory):
 
             texto = ''
             rate = 0.0
-            taxes_withhel = 0.0
 
             texto += '<TaxesOutputs>'
 
             for l in invoice.tax_line:
-                taxes_withhel += l.base_amount
                 texto += '<Tax>'
                 texto += '<TaxTypeCode>01</TaxTypeCode>'
                 if l.tax_code_id:
@@ -377,19 +378,6 @@ class create_facturae(osv.osv_memory):
                 texto += '</Tax>'
 
             texto += '</TaxesOutputs>'
-
-            texto += '<TaxesWithheld>'
-            texto += '<Tax>'
-            texto += '<TaxTypeCode>01</TaxTypeCode>'
-            texto += '<TaxRate>0.00</TaxRate>'
-            texto += '<TaxableBase>'
-            texto += '<TotalAmount>0.00</TotalAmount>'
-            texto += '</TaxableBase>'
-            texto += '<TaxAmount>'
-            texto += '<TotalAmount>0.00</TotalAmount>'
-            texto += '</TaxAmount>'
-            texto += '</Tax>'
-            texto += '</TaxesWithheld>'
 
             return texto
 
@@ -444,15 +432,6 @@ class create_facturae(osv.osv_memory):
                 texto += '</Discount>'
                 texto += '</DiscountsAndRebates>'
                 texto += '<GrossAmount>' + str('%.6f' % line.price_subtotal) + '</GrossAmount>'
-                texto += '<TaxesWithheld>'
-                texto += '<Tax>'
-                texto += '<TaxTypeCode>01</TaxTypeCode>'
-                texto += '<TaxRate>0.00</TaxRate>'
-                texto += '<TaxableBase>'
-                texto += '<TotalAmount>0.00</TotalAmount>'
-                texto += '</TaxableBase>'
-                texto += '</Tax>'
-                texto += '</TaxesWithheld>'
                 texto += '<TaxesOutputs>'
                 for l in line.invoice_line_tax_id:
                     rate = '%.2f' % (l.amount * 100)

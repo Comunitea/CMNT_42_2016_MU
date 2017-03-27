@@ -34,6 +34,7 @@ class res_partner_address(osv.osv):
         'unidad_tramitadora': fields.char(size=100,
                                           string='Unidad tramitadora'),
         'oficina_contable': fields.char(size=100, string='Oficina contable'),
+        'sef': fields.char('SEF', size=10)
     }
 
 res_partner_address()
