@@ -448,6 +448,64 @@ class create_facturae(osv.osv_memory):
             texto += '</Items>'
             return texto
 
+        def _invoice_payments():
+            rate = 0.0
+            texto = ''
+            texto += '<PaymentDetails>'
+
+            # Antes de nada, obtenemos el conjunto de vencimientos. Para ello, buscamos los apuntes contra
+            # la misma cuenta contable definida en la factura (la cuenta de cliente).
+            if invoice.account_id :
+                inv_account_id = invoice.account_id.id
+            else:
+                log.add(_('User error:\n\nNo se ha definido una cuenta contable para la factura.'), True)
+                raise log
+
+            move_obj = invoice.move_id
+            move_lines = invoice.move_id.line_id
+
+            for move in move_lines :
+                # Con esto evitamos incluir las líneas que no se corresponden con vencimientos.
+                if not move.account_id or (move.account_id.id <> inv_account_id) :
+                    continue
+                texto += '<Installment>'
+                date_maturity = invoice.date_invoice
+                if move.date_maturity :
+                    date_maturity = move.date_maturity
+                texto += '<InstallmentDueDate>' + date_maturity + '</InstallmentDueDate>'
+                if move.debit > move.credit :
+                    pay_amount = move.debit
+                else :
+                    pay_amount = -1 * move.credit
+                texto += '<InstallmentAmount>' + str('%.2f' % pay_amount) + '</InstallmentAmount>'
+                # Nos aseguramos de que se ha seleccionado el tipo de pago.
+                if not invoice.payment_type.face_code_id:
+                    log.add(_('User error:\n\nNo se ha indicado el código FACe del tipo de pago de la factura.'), True)
+                    raise log
+                texto += '<PaymentMeans>' + invoice.payment_type.face_code_id.code + '</PaymentMeans>'
+
+                # En función del tipo de pago seleccionado, debemos añadir la cuenta corriente de
+                # la empresa, o la cuenta corriente del cliente.
+                if invoice.payment_type.face_code_id == '02' :
+                    if not invoice.partner_bank_id:
+                        log.add(_('User error:\n\nNo se ha seleccionado una cuenta bancaria en la factura.'), True)
+                        raise log
+                    texto += '<AccountToBeDebited>'
+                    texto += '<IBAN>' + invoice.partner_bank_id.iban + '</IBAN>'
+                    texto += '</AccountToBeDebited>'
+                else:
+                    if not invoice.payment_type.related_bank_account_id:
+                        log.add(_('User error:\n\nNo se ha configurado una cuenta bancaria en el tipo de pago.'), True)
+                        raise log
+                    texto += '<AccountToBeCredited>'
+                    texto += '<IBAN>' + invoice.payment_type.related_bank_account_id.iban + '</IBAN>'
+                    texto += '</AccountToBeCredited>'
+                texto += '</Installment>'
+
+
+            texto += '</PaymentDetails>'
+            return texto
+
         def _invoices_facturae(self, cr, uid, context=None):
 
             texto = ''
@@ -468,6 +526,8 @@ class create_facturae(osv.osv_memory):
             texto += _taxes_output()
             texto += _invoice_totals()
             texto += _invoice_items(self, cr, uid, context=context)
+            if invoice.payment_type:
+                texto += _invoice_payments()
             texto += '<AdditionalData>'
             texto += '<InvoiceAdditionalInformation>' + (invoice.comment or "") + '</InvoiceAdditionalInformation>'
             texto += '</AdditionalData>'

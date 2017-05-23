@@ -36,13 +36,16 @@ establecer un certificado en formato .pfx con contraseña en la compañía.
 """,
     "website": "www.asr-oss.com",
     "license": "AGPL-3",
-    "depends": ["base", "account"],
+    "depends": ["base", "account", "account_payment_extension"],
     "data": [],
     "update_xml": [
         "country_view.xml",
         "data_res_country.xml",
         "partner_view.xml",
         "res_company.xml",
-        "wizard/create_facturae_view.xml"],
+        'payment_type_view.xml',
+        'data/l10n_es_facturae_data.xml',
+        "wizard/create_facturae_view.xml",
+        "security/ir.model.access.csv"],
     "installable": True,
 }
